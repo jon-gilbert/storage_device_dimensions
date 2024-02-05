@@ -5,6 +5,7 @@
 //
 
 include <BOSL2/std.scad>
+MAKE = false;
 
 
 // Function: sff_8200_dimensions()

@@ -1,0 +1,11 @@
+# vim swap:
+.*.swp
+# don't commit these, they are meant to be regenerated:
+output
+docs
+images
+*.stl
+*.stl.deps
+*.stl.gen
+.source_hashes
+*.scad.md

@@ -19,7 +19,7 @@ include $(wildcard *.deps)
 	-cp -au images/$** $(OUTPUT)/images
 
 %.stl: %.scad 
-	openscad -D"MAKE=true" --hardwarnings --export-format stl -o $@ -m make -d $@.gen $<
+	openscad -D"MAKE=true" -D'$$fs=0.3' --hardwarnings --export-format stl -o $@ -m make -d $@.gen $<
 	# fix generated deps file to compensate for WSL2 pathing YES I KNOW THIS IS ONLY A "ME" PROBLEM
 	cat $@.gen \
 		| sed -e 's%\\%=%' \
