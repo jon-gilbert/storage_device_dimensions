@@ -1,0 +1,38 @@
+
+export ROOT ?= $(abspath $(shell pwd)/..)
+export OUTPUT ?= $(ROOT)/output
+SCAD_MDS = $(addsuffix .md, $(wildcard *.scad))
+ifeq ($(SCAD_MDS),)
+$(info Warning: no SCAD markdown targets found. This Makefile.scads is for individual module directories. Did you mean to use Makefile?)
+endif
+
+
+all: $(SCAD_MDS) 
+
+include $(wildcard *.deps)
+
+%.scad.md: %.stl
+	mkdir -p images/$*
+	openscad-docsgen -D . -m $*.scad
+	cp -au $@ $(OUTPUT)
+	-cp -au spec_images/$** images/$*
+	-cp -au images/$** $(OUTPUT)/images
+
+%.stl: %.scad 
+	openscad -D"MAKE=true" --hardwarnings --export-format stl -o $@ -m make -d $@.gen $<
+	# fix generated deps file to compensate for WSL2 pathing YES I KNOW THIS IS ONLY A "ME" PROBLEM
+	cat $@.gen \
+		| sed -e 's%\\%=%' \
+		| sed -re "s%(C:/\S+)(.+)%echo -n '\t'; wslpath -u \1 | tr -d '\n' ; echo -n '' \2%e" \
+		| sed -e "s%=%\\\\%" > $@.deps
+	-rm $@.gen
+
+%.scad: 
+
+clean:
+	rm -rf *.deps *.deps.gen *.stl *.scad.md images
+
+.PHONY: $(MODS)
+
+.SECONDARY:
+

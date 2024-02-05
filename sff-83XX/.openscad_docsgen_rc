@@ -1,0 +1,6 @@
+DocsDirectory: .
+TargetProfile: githubwiki
+IgnoreFiles:
+  tmp_*.scad
+DefineHeader(BulletList): Todo
+DefineHeader(Table;Headers=^Anchor Name|Position Description): Named Anchors

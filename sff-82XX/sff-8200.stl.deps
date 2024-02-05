@@ -1,0 +1,32 @@
+sff-8200.stl: \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/partitions.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/utility.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/strings.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/regions.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/coords.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/affine.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/vnf.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/vectors.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/trigonometry.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/linalg.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/comparisons.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/lists.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/shapes2d.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/math.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/paths.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/distributors.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/transforms.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/version.scad \
+	sff-8200.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/geometry.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/constants.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/std.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/color.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/skin.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/masks2d.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/mutators.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/builtins.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/attachments.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/shapes3d.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/masks3d.scad \
+	/mnt/c/Users/jong/Documents/OpenSCAD/libraries/BOSL2/drawing.scad 
