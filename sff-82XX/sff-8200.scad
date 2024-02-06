@@ -1,4 +1,9 @@
 // LibFile: sff-8200.scad
+//   2.5" disk drive dimensions per SFF-82XX as per 2024/02/01. 
+//   See https://www.snia.org/technology-communities/sff/specifications?field_data_field_sff_doc_status=All&combine=sff-82&field_release_date_value_2%5Bvalue%5D%5Bdate%5D=&field_release_date_value%5Bvalue%5D%5Bdate%5D=&items_per_page=20 
+//   for the full set of 2.5" drive dimension specifications.
+// FileGroup: Internal Bay Drives
+// FileSummary: 2.5" Disk Drives
 // 
 // Includes:
 //   include <sff-8200.scad>
@@ -8,11 +13,49 @@ include <BOSL2/std.scad>
 MAKE = false;
 
 
+// Section: SFF-8200
+//   2.5" disk drive dimensions per SFF-8200 rev 3.3 (2016/01/16). 
+//   Reference SFF-8200 dimensions from https://members.snia.org/document/dl/25850
+//   .
+//   The dimensions in SFF-8200 are wholesale replicated into SFF-8201. As SFF-8200
+//   seems to be a broader, catch-all specification, callers are encouraged to use 
+//   the drive-specific SFF-8201 modules and functions, listed below. 
+//
 // Function: sff_8200_dimensions()
+// Synopsis: Synonym for sff_8201_dimensions()
+// Usage:
+//   A = sff_8201_dimensions();
+//   A = sff_8201_dimensions(<a1=19.06>, <a6=100.45>);
+// Description:
+//   Synonym for `sff_8201_dimensions()`
+// See also: sff_8201_dimensions()
+function sff_8200_dimensions(a1=19.05, a6=100.45) = sff_8201_dimensions(a1, a6);
+
+
+// Module: sff_8200()
+// Synopsis: Synonym for sff_8201()
+// Usage:
+//   sff_8200();
+//   sff_8200(<a=undef,>, <anchor=CENTER>, <spin=0>, <orient=UP>);
+//   [PARENT] sff_8200();
+// Description:
+//    Synonym for `sff_8201()`
+// See also: sff_8201()
+module sff_8200(a=undef, bottom_mounts=true, anchor=CENTER, spin=0, orient=UP) {
+    sff_8201(a=a, bottom_mounts=bottom_mounts, anchor=anchor, spin=spin, orient=orient)
+        children();
+}
+
+
+// Section: SFF-8201
+//   2.5" disk drive dimensions per SFF-8201 rev3.4 (2018/01/19)
+//   Reference SFF-8201 dimensions from https://members.snia.org/document/dl/25851
+//
+// Function: sff_8201_dimensions()
 // Synopsis: return a list of dimensions for a 2.5" internally mounted disk drive
 // Usage:
-//   A = sff_8200_dimensions();
-//   A = sff_8200_dimensions(<a1=19.06>, <a6=100.45>);
+//   A = sff_8201_dimensions();
+//   A = sff_8201_dimensions(<a1=19.06>, <a6=100.45>);
 // Description:
 //   Returns a list of 2.5" disk drive dimensions, `A`, as specified by SFF-8200.
 //   All values are returned in millimeters (mm). 
@@ -61,16 +104,21 @@ MAKE = false;
 //   | A38 | Min | Penetration | 3   | 2 for A1 ≤ 7 mm |
 //   | A41 | Min | Penetration | 2.5 | |
 //   .
-//   ![SFF-8200 Figure 3-1](images/sff-8200/sff-8200-fig3-1.png)
+//   ![SFF-8201 Figure 3-1](images/sff-8200/sff-8201-fig3-1.png)
 //   .
-//   ![SFF-8200 Figure 3-2](images/sff-8200/sff-8200-fig3-2-detailB.png)
+//   ![SFF-8201 Figure 3-2](images/sff-8200/sff-8201-fig3-2-detailB.png)
 // Arguments:
 //   a1 = Specify an explicit dimension for measurement A1. Default: `19.05`
 //   a6 = Specify an explicit dimension for measurement A6. Default: `100.45`
 // Continues:
 //   It is an error to specify a value for A1 that is not listed in SFF-8200. It is an error 
 //   to specify a value for A6 that exceeds its listed maximum, or that is not greater than zero.
-//   SFF-8200 defines A26 as `M3`, which is interpreted by `sff_8200_dimensions()` as the diameter 
+//   .
+///   Dimension elements `0`, `7` - `9`, and `15` are set as `undef`, as they do not appear in table 3-1. 
+//   Several dimension elements are not preset in table 3-1, and will return as `undef` in the position 
+//   list returned. They are: `0 7 8 9 13 14 15 16 17 18 19 20 21 22 34 35 36 42 43 44 45 46 47 48 49`.
+//   .
+//   SFF-8201 defines A26 as `M3`, which is interpreted by `sff_8201_dimensions()` as the diameter 
 //   of an M3 metric screw, or `3.00`.
 //   Note that A2, A3, and A38 will change based on the value selected for A1 in accordance with 
 //   table 3-1, above.
@@ -79,11 +127,11 @@ MAKE = false;
 //   A38 and A42 are minimum values, and can concievably be as great as the dimension to which they are applied. 
 //
 // Example(NORENDER):
-//   A = sff_8200_dimensions();
+//   A = sff_8201_dimensions();
 //   echo(A[28]);
 //   // Yields: ECHO: 4.07
 //
-function sff_8200_dimensions(a1=19.05, a6=100.45) =
+function sff_8201_dimensions(a1=19.05, a6=100.45) =
     let(
         a1_valids = [ 19.05, 17.00, 15.00, 12.70, 10.50, 9.50, 8.47, 7.00, 5.00 ]
     )
@@ -135,37 +183,203 @@ function sff_8200_dimensions(a1=19.05, a6=100.45) =
     ];
 
 
-
-
-// SFF-8200 indicates a connector slot but does not provide dimensions for it.
-module sff_8200(a=undef, anchor=CENTER, spin=0, orient=UP) {
-    A = (is_list(a)) ? a : sff_8200_dimensions();
+// Module: sff_8201()
+// Synopsis: Model a 2.5" internal disk drive
+// Usage:
+//   sff_8201();
+//   sff_8201(<a=undef,>, <bottom_mounts=true>, <anchor=CENTER>, <spin=0>, <orient=UP>);
+//   [PARENT] sff_8201();
+// Description:
+//   Produces a model of a 2.5" internal disk drive, according to the dimensions of SFF-8201. There are variations allowed in some 
+//   labeled dimensions detailed in SFF-8201: to use those variations you need to call `sff_8201_dimensions()` and pass the 
+//   modified dimension list as an argument `a`.  
+//   SFF-8201 usually provides eight mounting points - four on the bottom surface, and two on each of the left and right surfaces. 
+//   However, when the device's height (dimension A1) is 7mm or less, the bottom mounts may be optional. To inhibit the addition of 
+//   those bottom mount points, set `bottom_mounts` to `false`. Note that bottom mounts are always added when the device's A1 dimension 
+//   is larger than 7mm.
+//   .
+//   SFF-8201 indicates a connector slot but does not provide dimensions for it. In models produced by `sff_8201()`, the connector side is 
+//   oriented towards `BACK`, or in the positive Y-axis direction. Other modules produced within the SFF-82XX set can use the model from 
+//   `sff_8201()` to produce connecter-specific models for their spec. 
+//   .
+//   The resulting model from `sff-8201()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//
+// Arguments:
+//   a = A list of dimensions from `sff_8201_dimensions()`. Default: `undef`, in which case `sff_8201_dimensions()` will be called and its values used directly
+//   bottom_mounts = If set to `false`, drives with an A1 dimension that is less than or equal to `7.00` will not have bottom mounting holes. Default: `true`
+//   anchor = Translates the model so that the specified anchor point is located at origin `[0,0,0]`. Default: `CENTER`
+//   spin = Rotates the model this many degrees around the Z-axis after anchoring. Default: `0`
+//   orient = Repositions the model in this direction after spin is applied. Default: `UP`
+// Continues:
+//   SFF-8201 does not define the material or thickness that makes up A37, the diameter around the mount points. For the purposes of 
+//   `sff_8201()`, it's set at `0.01` and carved away from the main drive body to show where they'd be placed on an actual device.
+// Named Anchors:
+//   Y1, Y2, Y3, Y4 = The four mounting points on the left and right hand sides of the drive, oriented outwards.
+//   X1, X2, X3, X4 = The four mounting points on the bottom of the drive (if they should be present based on SFF-8201), oriented downwards.
+//   CONNECTOR END = The back of the drive, oriented towards the back.
+// Figure(3D,Med): Available anchor points:
+//   expose_anchors() sff_8201() show_anchors(std=false);
+// Example(Render,Med,ScriptUnder): a basic 2.5" disk drive:
+//   sff_8201();
+// Example(Render,Med,ScriptUnder): a 7mm-thick 2.5" disk drive, using a modified set of dimensions from `sff_8201_dimensions()`:
+//   seven_mm = sff_8201_dimensions(a1=7);
+//   sff_8201(a=seven_mm);
+//
+module sff_8201(a=undef, bottom_mounts=true, anchor=CENTER, spin=0, orient=UP) {
+    A = (is_list(a)) ? a : sff_8201_dimensions();
+    a37_depth = 0.01;
     size = [
         A[4],
         A[6],
         A[1] + A[2] - A[3]
     ];
-    attachable(anchor, spin, orient, size=size) {
+    bmh = (A[1] > 7.00) ? true : bottom_mounts;
+
+    anchors = concat(
+        [
+            named_anchor("CONNECTOR END", [0, size.y/2, 0], BACK, 0),
+            //
+            named_anchor("Y1", [ size.x/2,      size.y / 2 - A[52], -1 * (size.z/2 - A[23]) ], RIGHT, 0),
+            named_anchor("Y2", [ size.x/2,      size.y / 2 - A[53], -1 * (size.z/2 - A[23]) ], RIGHT, 0),
+            named_anchor("Y3", [ -1 * size.x/2, size.y / 2 - A[52], -1 * (size.z/2 - A[23]) ], LEFT,  0),
+            named_anchor("Y4", [ -1 * size.x/2, size.y / 2 - A[53], -1 * (size.z/2 - A[23]) ], LEFT,  0),
+        ],
+        (bmh)
+            ? [ 
+                named_anchor("X1", [ A[29]/2,      size.y/2 - A[50], -1 * (size.z/2) ], DOWN, 0),
+                named_anchor("X2", [ A[29]/2,      size.y/2 - A[51], -1 * (size.z/2) ], DOWN, 0),
+                named_anchor("X3", [ -1 * A[29]/2, size.y/2 - A[51], -1 * (size.z/2) ], DOWN, 0),
+                named_anchor("X4", [ -1 * A[29]/2, size.y/2 - A[50], -1 * (size.z/2) ], DOWN, 0)
+                ]
+            : []
+        );
+
+    attachable(anchor, spin, orient, size=size, anchors=anchors) {
         difference() {
             cuboid(size, anchor=CENTER);
-
-            xflip_copy() {
-                move_copies([
-                        [ size.x/2, size.y / 2 - A[53], -1 * (size.z/2 - A[23]) ],  // Y2
-                        [ size.x/2, size.y / 2 - A[52], -1 * (size.z/2 - A[23]) ],  // Y1
-                    ])
-                    cyl(d=A[38], l=A[38] + 1, anchor=BOTTOM, orient=LEFT);
-                move_copies([
-                        [ A[29]/2, size.y/2 - A[51], -1 * (size.z/2) ],  // X2
-                        [ A[29]/2, size.y/2 - A[50], -1 * (size.z/2) ],  // X1
-                    ])
-                    cyl(d=A[38], l=A[41] + 1, anchor=BOTTOM, orient=UP);
+            for (anchor=anchors) {
+                if (in_list(anchor[0], ["Y1", "Y2", "Y3", "Y4", "X1", "X2", "X3", "X4"])) {
+                    screw_len = (in_list(anchor[0], ["Y1", "Y2", "Y3", "Y4"])) ? A[38] : A[41];
+                    move(anchor[1])
+                        cyl(d=A[38], l=screw_len, anchor=TOP, orient=anchor[2])
+                            attach(TOP, BOTTOM, overlap=a37_depth)
+                                cyl(d=A[37], l=a37_depth);
+                }
             }
         }
         children();
     }
 }
 
+
 if (MAKE)
-    sff_8200();
+    sff_8201();
+
+
+// Section: SFF-8212
+//   2.5" disk drives with 50-pin connector per SFF-8212 rev 1.4 (1995/07/27). 
+//   Revised as EIA-720-B 2016/01 at Rev 1.4 dated August 30, 2014
+//   Reference SFF-8212 dimensions from https://members.snia.org/document/dl/25852
+//
+// Function: sff_8212_dimensions()
+// Synopsis: return a list of dimensions for the positioning of a 50-pin connector on a 2.5" disk drive
+// Usage:
+//   A = sff_8212_dimensions();
+// Description:
+//   Returns the dimensions that detail the position of a 50-pin connector on a 2.5" 
+//   disk drive, as list `A`. All values are returned in millimeters (mm).
+//   Reference https://members.snia.org/document/dl/25852 for SFF-8212.
+//   .
+//   TABLE 3-1 50-PIN CONNECTOR LOCATION
+//   | Dimension |     | Millimeters | Inches |
+//   | ----------|-----|------------:|-------:|
+//   | A 7       |     | 31.17       | 1.227  |
+//   | A 8       |     | 1.00        | 0.039  |
+//   | A 9       |     | 3.99        | 0.157  |
+//   | A10       |     | 10.14       | 0.399  |
+//   | A11       |     | 2.00        | 0.079  |
+//   | A12       |     | 2.00        | 0.079  |
+//   | A13       |     | 0.50        | 0.020  |
+//   | A14       |     | 0.05        | 0.002  |
+//   | A15       |     | 0.75        | 0.030  |
+//   | A16       |     | 0.10        | 0.004  |
+//   | A17       |     | 0.50        | 0.020  |
+//   | A18       |     | 0.05        | 0.002  |
+//   | A19       |     | 0.50        | 0.020  |
+//   | A20       |     | 0.10        | 0.004  |
+//   | A21       |     | 3.86        | 0.152  |
+//   | A22       |     | 0.20        | 0.008  |
+//   | A34       | Min | 1.00        | 0.039  |
+//   | A35       | Max | 8.00        | 0.315  |
+//   | A36       | Min | 60.20       | 2.370  |
+//   | A39       | Min | 1.25        | 0.049  |
+//   | A40       | Min | 0.25        | 0.010  |
+//   | A54       |     | 10.24       | 0.403  |
+//   .
+//   Notes: 
+//   * a) X, Y and Z Datums are as defined by SFF-8201.
+//   * b) A15 and A19 control the location of the connector as a whole.
+//   * c) A16 and A20 control the location of the pins within the connector.
+//   ![SFF-8212 Figure 3-1](images/sff-8200/sff-8212-figure3-1.png)
+//
+// Arguments:
+//   a34 = Specify a value for A34, which has a minimum of `1.00`. Default: `1.00`
+//   a35 = Specify a value for A35, which has a maximum of `8.00`. Default: `8.00`
+//   a36 = Specify a value for A34, which has a minimum of `60.20`. Default: `60.20`
+//   a39 = Specify a value for A34, which has a minimum of `1.25`. Default: `1.25`
+//   a40 = Specify a value for A34, which has a minimum of `0.25`. Default: `0.25`
+//
+// Continues:
+//   It is an error to specify a value for A34, A36, A39, & A40 that is below their stated minimum. It 
+//   is an error the specify a value for A35 that is above its stated minimum, or that is below or at `0` (zero).
+//   Several dimension elements are not preset in table 3-1, and will return as `undef` in the position 
+//   list returned. They are: `0 1 2 3 4 5 6 23 24 25 26 27 28 29 30 31 32 33 37 38 41 42 43 44 45 46 47 48 49 50 51 52 53`.
+// 
+// Example(NORENDER):
+//   A = sff_8212_dimensions();
+//   echo(A[19]);
+//   // Yields: ECHO: 0.50
+//
+function sff_8212_dimensions(a34=1.00, a35=8.00, a36=60.20, a39=1.25, a40=0.25) = 
+    assert(a34 >= 1.00, "Value A34 for a 50-pin connector must be greater than or equal to 1.00")
+    assert(a35 <= 8.00 && a35 > 0, "Value A35 for a 50-pin connector must be less than or equal to 8.00")
+    assert(a36 >= 60.20, "Value A36 for a 50-pin connector must be greater than than or equal to 60.20")
+    assert(a39 >= 1.25, "Value A39 for a 50-pin connector must be greater than than or equal to 1.25")
+    assert(a40 >= 0.25, "Value A40 for a 50-pin connector must be greater than than or equal to 0.25")
+    [
+        undef, undef, undef, undef, undef, undef, undef,  // A0 .. A6 - not present
+        31.17,     // A7
+        1.00,      // A8
+        3.99,      // A9
+        10.14,     // A10
+        2.00,      // A11
+        2.00,      // A12
+        0.50,      // A13
+        0.05,      // A14
+        0.75,      // A15
+        0.10,      // A16
+        0.50,      // A17
+        0.05,      // A18
+        0.50,      // A19
+        0.10,      // A20
+        3.86,      // A21
+        0.20,      // A22
+        undef, undef, undef, undef, undef, undef, undef,  // A23 .. A29 - not present
+        undef, undef, undef, undef,  // A30 .. A33 - not present
+        a34,       // A34 = Min
+        a35,       // A35 = Max 
+        a36,       // A36 = Min
+        undef, undef, // A37, A38 - not present
+        a39,       // A39 = Min
+        a40,       // A40 = Min
+        undef, undef, undef, undef, undef, undef, undef, undef, undef,  // A41 .. A49 - not present
+        undef, undef, undef, undef,  // A50 .. A53 - not present
+        10.24,     // A54
+    ];
+
+
+module sff_8212(anchor=CENTER, spin=0, orient=UP) {
+}
+
+
 
