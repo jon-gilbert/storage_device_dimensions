@@ -108,9 +108,9 @@ function sff_8551_dimensions(a1=41.53, a4=202.80) =
 //   thread pitch of `1` making the minimum depth `2`; `sff_8551()` uses a screw length of `4`.
 //   SFF-8551 also does not define the dimensions of the forward button beyond its protruding distance relative to the front of the drive bay. `sff_8551()` makes 
 //   a generalized assumption regarding the button's size and placement. 
-// Example: a basic 5.25" optical drive:
+// Example(Render): a basic 5.25" optical drive:
 //   sff_8551();
-// Example: a roughly-carved-out 5.25" drive bay mount:
+// Example(Render): a roughly-carved-out 5.25" drive bay mount:
 //   diff()
 //     sff_8551(button=false)
 //       up(2)
@@ -119,7 +119,7 @@ function sff_8551_dimensions(a1=41.53, a4=202.80) =
 //             cuboid([140, 203, 42])
 //               attach(FWD, BACK)
 //                 cuboid([140, 10, 30]);
-// Example: a half-depth 5.25" bay drive using a modified set of dimensions from `sff_8551_dimensions()`:
+// Example(Render): a half-depth 5.25" bay drive using a modified set of dimensions from `sff_8551_dimensions()`:
 //   short_drive = sff_8551_dimensions(a4=100);
 //   sff_8551(a=short_drive);
 //

@@ -1,9 +1,8 @@
 // LibFile: sff-8501.scad
-// FileGroup: External Bay Drives
-// FileSummary: 5.25" Full-height Drives
-// Description:
 //   5.25" drive dimensions per SFF-8501 rev 1.1 (1995/06/04).
 //   Reference SFF-8501 dimensions from https://members.snia.org/document/dl/25928
+// FileGroup: External Bay Drives
+// FileSummary: 5.25" Full-height Drives
 //
 // Includes:
 //   include <sff-8501.scad>
@@ -108,9 +107,9 @@ function sff_8501_dimensions(a1=82.55) =
 //   screw mounts must accept at least two threads' worth of engagement at each mount point. For the purposes of this model, 
 //   `sff_8501()` uses a diameter of `3.6`, and screw length of `4`.
 //   .
-// Example: a basic 5.25" disk drive:
+// Example(Render): a basic 5.25" disk drive:
 //   sff_8501();
-// Example: a half-height 5.25" bay disk drive using a modified set of dimensions from `sff_8501_dimensions()`:
+// Example(Render): a half-height 5.25" bay disk drive using a modified set of dimensions from `sff_8501_dimensions()`:
 //   half_height_drive = sff_8501_dimensions(a1=41.27);
 //   sff_8501(a=half_height_drive);
 //
