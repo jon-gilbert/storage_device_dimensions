@@ -210,7 +210,7 @@ function sff_8201_dimensions(a1=19.05, a6=100.45) =
 //   oriented towards `BACK`, or in the positive Y-axis direction. Other modules produced within the SFF-82XX set can use the model from 
 //   `sff_8201()` to produce connecter-specific models for their spec. 
 //   .
-//   The resulting model from `sff-8201()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//   The resulting model from `sff_8201()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
 //
 // Arguments:
 //   a = A list of dimensions from `sff_8201_dimensions()`. Default: `undef`, in which case `sff_8201_dimensions()` will be called and its values used directly
@@ -300,6 +300,7 @@ if (MAKE)
 // Description:
 //   Returns the dimensions that detail the position of a 50-pin connector on a 2.5" 
 //   disk drive, as list `A`. All values are returned in millimeters (mm).
+//   .
 //   Reference https://members.snia.org/document/dl/25852 for SFF-8212.
 //   .
 //   TABLE 3-1 50-PIN CONNECTOR LOCATION
@@ -401,11 +402,14 @@ function sff_8212_dimensions(a34=1.00, a35=8.00, a36=60.20, a39=1.25, a40=0.25) 
 //   modified dimension list as an argument `a`. There are variations also allowed in SFF-8212: to use those variations you need to 
 //   call `sff_8212_dimensions()` and pass the modified dimenion list as an argument `b`.  
 //   .
-//   The resulting model from `sff-8201()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//   Reference https://members.snia.org/document/dl/25852 for SFF-8212.
+//   .
+//   The resulting model from `sff_8201()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
 //
 // Arguments:
 //   a = A list of dimensions from `sff_8201_dimensions()`. Default: `undef`, in which case `sff_8201_dimensions()` will be called and its values used directly
 //   b = A list of dimensions from `sff_8212_dimensions()`. Default: `undef`, in which case `sff_8212_dimensions()` will be called and its values used directly
+//   bottom_mounts = If set to `false`, drives with an A1 dimension that is less than or equal to `7.00` will not have bottom mounting holes. Default: `true`
 //   anchor = Translates the model so that the specified anchor point is located at origin `[0,0,0]`. Default: `CENTER`
 //   spin = Rotates the model this many degrees around the Z-axis after anchoring. Default: `0`
 //   orient = Repositions the model in this direction after spin is applied. Default: `UP`
@@ -482,13 +486,122 @@ module _sff_8212_50pin_connector(b=undef, anchor=CENTER, spin=0, orient=UP) {
     }
 }
 
-//sff-8212.scad
-// https://members.snia.org/document/dl/25852
-//  2.5" Form Factor Drive with 50-pin Connector
 
-//sff-8222.scad
-// https://members.snia.org/document/dl/25854
-//  2.5" Form Factor Drive with SCA-2 Connector
+// Section: SFF-8222
+//   2.5" disk drives with a SCA-2 connector per SFF-8222 rev 2.3 (2004/07/16).
+//   Revised as EIA-720-B 2016/01 at Rev 2.3 dated August 30, 2014
+//   Reference SFF-8222 dimensions from https://members.snia.org/document/dl/25854
+//
+// Function: sff_8222_dimensions()
+// Synopsis: return a list of dimensions for the positioning of a SCA-2 connector on a 2.5" disk drive
+// Usage:
+//   A = sff_8222_dimensions();
+//   A = sff_8222_dimensions(<a2=66.50>);
+// Description:
+//   Returns the dimensions that detail the position of a 50-pin connector on a 2.5" 
+//   disk drive, as list `A`. All values are returned in millimeters (mm).
+//   .
+//   Reference https://members.snia.org/document/dl/25854 for SFF-8222.
+//   .
+//   TABLE 3-1 SCA-2 CONNECTOR LOCATION
+//   | Dimension | Millimeters |       | Comments    |
+//   |-----------|------------:|------:|-------------|
+//   | A 1       | 69.85       | 2.750 |             |
+//   | A 2       | 66.50       | 2.618 | 80-position |
+//   | A 2       | 41.10       | 1.618 | 40-position |
+//   | A 3       | 1.00        | 0.039 |             |
+//   | A 4       | 0.35        | 0.014 |             |
+//   | A 5       | 7.00        | 0.276 |             |
+//   | A 6       | 1.00        | 0.039 |             |
+//   | A 7       | 4.00        | 0.157 |             |
+//   | A 8       | 24.00       | 0.945 |             |
+//   | A 9       | 0.35        | 0.014 |             |
+//   | A10       | 0.50        | 0.020 |             |
+//   .
+//   ![SFF-8222 Figure 3.2](images/sff-82XX/sff-8222-figure3-2.png)
+//
+// Arguments:
+//   a2 = Specify a value for A2, which has two possible values. Default: `66.50`
+//
+// Continues:
+//   It is an error to specify a value for A2 that is not one of the two listed possible values.
+//   Dimension element `0` is set as `undef`, as it does not appear in table 3-1.
+//
+// Example(NORENDER):
+//   A = sff_822_dimensions();
+//   echo(A[1]);
+//   // Yields: ECHO: 69.85
+//
+function sff_8222_dimensions(a2=66.50) =
+    let(
+        a2_valids = [ 66.50, 41.10 ]
+    )
+    assert(in_list(a2, a2_valids),
+        str("Value A2 for a 2.5\" SCA-2 connector must one of the following values: ", a2_valids))
+    [
+        undef,  // A0 - not present
+        69.85,  // A1
+        a2,  // A2
+        1.00,   // A3
+        0.35,   // A4
+        7.00,   // A5
+        1.00,   // A6
+        4.00,   // A7
+        24.00,  // A8
+        0.35,   // A9
+        0.50    // A10
+    ];
+
+
+// Module: sff_8222()
+// Synopsis: Model a 2.5" internal disk drive with a SCA-2 connector
+// Usage:
+//   sff_8222();
+//   sff_8222(<a=undef>, <b=undef>, <anchor=CENTER>, <spin=0>, <orient=UP>);
+// Description:
+//   Produces a model of a 2.5" internal disk drive, according to the dimensions of SFF-8222. There are variations allowed in some 
+//   labeled dimensions detailed in SFF-8201: to use those variations you need to call `sff_8201_dimensions()` and pass the 
+//   modified dimension list as an argument `a`. There are variations also allowed in SFF-8222: to use those variations you need to 
+//   call `sff_8222_dimensions()` and pass the modified dimenion list as an argument `b`.  
+//   .
+//   The SCA-2 connector is not modeled to its specification in `sff_8222()`, only its outer dimensions.
+//   .
+//   Reference https://members.snia.org/document/dl/25852 for SFF-8222.
+//   .
+//   The resulting model from `sff_8222()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//
+// Arguments:
+//   a = A list of dimensions from `sff_8201_dimensions()`. Default: `undef`, in which case `sff_8201_dimensions()` will be called and its values used directly
+//   b = A list of dimensions from `sff_8222_dimensions()`. Default: `undef`, in which case `sff_8222_dimensions()` will be called and its values used directly
+//   bottom_mounts = If set to `false`, drives with an A1 dimension that is less than or equal to `7.00` will not have bottom mounting holes. Default: `true`
+//   anchor = Translates the model so that the specified anchor point is located at origin `[0,0,0]`. Default: `CENTER`
+//   spin = Rotates the model this many degrees around the Z-axis after anchoring. Default: `0`
+//   orient = Repositions the model in this direction after spin is applied. Default: `UP`
+// Named Anchors:
+//   Y1, Y2, Y3, Y4 = The four mounting points on the left and right hand sides of the drive, oriented outwards.
+//   X1, X2, X3, X4 = The four mounting points on the bottom of the drive (if they should be present based on SFF-8201), oriented downwards.
+//   CONNECTOR END = The back of the drive, oriented towards the back.
+// Figure(3D,Med): Available anchor points:
+//   expose_anchors() sff_8222() show_anchors(std=false);
+// Example(Render,Med,ScriptUnder): a basic 2.5" disk drive with a connector. The model is rotated 180 degrees, to show its back in this example:
+//   sff_8222(spin=180);
+//
+module sff_8222(a=undef, b=undef, bottom_mounts=true, anchor=CENTER, spin=0, orient=UP) {
+    A = (is_list(a)) ? a : sff_8201_dimensions();
+    B = (is_list(b)) ? b : sff_8222_dimensions();
+
+    size = [ A[4], A[6], A[1] + A[2] - A[3] ];
+    anchors = _sff_8201_anchors(A, bottom_mounts);
+
+    attachable(anchor, spin, orient, size=size, anchors=anchors) {
+        sff_8201(a=A, bottom_mounts=bottom_mounts)
+            down(size.z/2)
+                up(B[5]/2)
+                    attach(BACK, FWD)
+                        cuboid([B[2], B[8] - A[52], B[5]]);
+        children();
+    }
+}
 
 
 //sff-8223.scad
