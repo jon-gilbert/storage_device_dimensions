@@ -228,31 +228,9 @@ function sff_8201_dimensions(a1=19.05, a6=100.45) =
 module sff_8201(a=undef, bottom_mounts=true, anchor=CENTER, spin=0, orient=UP) {
     A = (is_list(a)) ? a : sff_8201_dimensions();
     a37_depth = 0.01;
-    size = [
-        A[4],
-        A[6],
-        A[1] + A[2] - A[3]
-    ];
-    bmh = (A[1] > 7.00) ? true : bottom_mounts;
+    size = [ A[4], A[6], A[1] + A[2] - A[3] ];
 
-    anchors = concat(
-        [
-            named_anchor("CONNECTOR END", [0, size.y/2, 0], BACK, 0),
-            //
-            named_anchor("Y1", [ size.x/2,      size.y / 2 - A[52], -1 * (size.z/2 - A[23]) ], RIGHT, 0),
-            named_anchor("Y2", [ size.x/2,      size.y / 2 - A[53], -1 * (size.z/2 - A[23]) ], RIGHT, 0),
-            named_anchor("Y3", [ -1 * size.x/2, size.y / 2 - A[52], -1 * (size.z/2 - A[23]) ], LEFT,  0),
-            named_anchor("Y4", [ -1 * size.x/2, size.y / 2 - A[53], -1 * (size.z/2 - A[23]) ], LEFT,  0),
-        ],
-        (bmh)
-            ? [ 
-                named_anchor("X1", [ A[29]/2,      size.y/2 - A[50], -1 * (size.z/2) ], DOWN, 0),
-                named_anchor("X2", [ A[29]/2,      size.y/2 - A[51], -1 * (size.z/2) ], DOWN, 0),
-                named_anchor("X3", [ -1 * A[29]/2, size.y/2 - A[51], -1 * (size.z/2) ], DOWN, 0),
-                named_anchor("X4", [ -1 * A[29]/2, size.y/2 - A[50], -1 * (size.z/2) ], DOWN, 0)
-                ]
-            : []
-        );
+    anchors = _sff_8201_anchors(A, bottom_mounts);
 
     attachable(anchor, spin, orient, size=size, anchors=anchors) {
         difference() {
@@ -272,6 +250,31 @@ module sff_8201(a=undef, bottom_mounts=true, anchor=CENTER, spin=0, orient=UP) {
 }
 
 
+function _sff_8201_anchors(A, bottom_mounts) =
+    let(
+        bmh = (A[1] > 7.00) ? true : bottom_mounts,
+        size = [ A[4], A[6], A[1] + A[2] - A[3] ]
+    )
+    concat(
+        [
+            named_anchor("CONNECTOR END", [0, size.y/2, 0], BACK, 0),
+            //
+            named_anchor("Y1", [ size.x/2,      size.y / 2 - A[52], -1 * (size.z/2 - A[23]) ], RIGHT, 0),
+            named_anchor("Y2", [ size.x/2,      size.y / 2 - A[53], -1 * (size.z/2 - A[23]) ], RIGHT, 0),
+            named_anchor("Y3", [ -1 * size.x/2, size.y / 2 - A[52], -1 * (size.z/2 - A[23]) ], LEFT,  0),
+            named_anchor("Y4", [ -1 * size.x/2, size.y / 2 - A[53], -1 * (size.z/2 - A[23]) ], LEFT,  0),
+        ],
+        (bmh)
+            ? [ 
+                named_anchor("X1", [ A[29]/2,      size.y/2 - A[50], -1 * (size.z/2) ], DOWN, 0),
+                named_anchor("X2", [ A[29]/2,      size.y/2 - A[51], -1 * (size.z/2) ], DOWN, 0),
+                named_anchor("X3", [ -1 * A[29]/2, size.y/2 - A[51], -1 * (size.z/2) ], DOWN, 0),
+                named_anchor("X4", [ -1 * A[29]/2, size.y/2 - A[50], -1 * (size.z/2) ], DOWN, 0)
+                ]
+            : []
+    );
+
+
 if (MAKE)
     sff_8201();
 
@@ -285,6 +288,7 @@ if (MAKE)
 // Synopsis: return a list of dimensions for the positioning of a 50-pin connector on a 2.5" disk drive
 // Usage:
 //   A = sff_8212_dimensions();
+//   A = sff_8212_dimensions(<a34=1.00>, <a35=8.00>, <a36=60.20>, <a39=1.25>, <a40=0.25>);
 // Description:
 //   Returns the dimensions that detail the position of a 50-pin connector on a 2.5" 
 //   disk drive, as list `A`. All values are returned in millimeters (mm).
@@ -320,7 +324,7 @@ if (MAKE)
 //   * a) X, Y and Z Datums are as defined by SFF-8201.
 //   * b) A15 and A19 control the location of the connector as a whole.
 //   * c) A16 and A20 control the location of the pins within the connector.
-//   ![SFF-8212 Figure 3-1](images/sff-8200/sff-8212-figure3-1.png)
+//   ![SFF-8212 Figure 3-1](images/sff-82XX/sff-8212-figure3-1.png)
 //
 // Arguments:
 //   a34 = Specify a value for A34, which has a minimum of `1.00`. Default: `1.00`
@@ -378,8 +382,96 @@ function sff_8212_dimensions(a34=1.00, a35=8.00, a36=60.20, a39=1.25, a40=0.25) 
     ];
 
 
-module sff_8212(anchor=CENTER, spin=0, orient=UP) {
+// Module: sff_8212()
+// Synopsis: Model a 2.5" internal disk drive with a 50-pin connector
+// Usage:
+//   sff_8212();
+//   sff_8212(<a=undef>, <b=undef>, <anchor=CENTER>, <spin=0>, <orient=UP>);
+// Description:
+//   Produces a model of a 2.5" internal disk drive, according to the dimensions of SFF-8212. There are variations allowed in some 
+//   labeled dimensions detailed in SFF-8201: to use those variations you need to call `sff_8201_dimensions()` and pass the 
+//   modified dimension list as an argument `a`. There are variations also allowed in SFF-8212: to use those variations you need to 
+//   call `sff_8212_dimensions()` and pass the modified dimenion list as an argument `b`.  
+//   .
+//   The resulting model from `sff-8201()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//
+// Arguments:
+//   a = A list of dimensions from `sff_8201_dimensions()`. Default: `undef`, in which case `sff_8201_dimensions()` will be called and its values used directly
+//   b = A list of dimensions from `sff_8212_dimensions()`. Default: `undef`, in which case `sff_8212_dimensions()` will be called and its values used directly
+//   anchor = Translates the model so that the specified anchor point is located at origin `[0,0,0]`. Default: `CENTER`
+//   spin = Rotates the model this many degrees around the Z-axis after anchoring. Default: `0`
+//   orient = Repositions the model in this direction after spin is applied. Default: `UP`
+// Named Anchors:
+//   Y1, Y2, Y3, Y4 = The four mounting points on the left and right hand sides of the drive, oriented outwards.
+//   X1, X2, X3, X4 = The four mounting points on the bottom of the drive (if they should be present based on SFF-8201), oriented downwards.
+//   CONNECTOR END = The back of the drive, oriented towards the back.
+// Figure(3D,Med): Available anchor points:
+//   expose_anchors() sff_8212() show_anchors(std=false);
+// Example(Render,Med,ScriptUnder): a basic 2.5" disk drive with a connector. The model is rotated 180 degrees, to show its back in this example:
+//   sff_8212(spin=180);
+//
+module sff_8212(a=undef, b=undef, bottom_mounts=true, anchor=CENTER, spin=0, orient=UP) {
+    A = (is_list(a)) ? a : sff_8201_dimensions();
+    B = (is_list(b)) ? b : sff_8212_dimensions();
+
+    size = [ A[4], A[6], A[1] + A[2] - A[3] ];
+
+    anchors = _sff_8201_anchors(A, bottom_mounts);
+
+    cavity_size = [ B[36] - B[35], B[21] * 2, B[9] + B[34] ];
+    // 
+    attachable(anchor, spin, orient, size=size, anchors=anchors) {
+        diff() {
+            sff_8201(a=A, bottom_mounts=bottom_mounts) {
+                down(size.z/2) up(cavity_size.z/2)
+                    left(B[35]) right(size.x/2) left(cavity_size.x/2)
+                        attach(BACK, FWD, overlap=cavity_size.y)
+                            tag("remove")
+                                cuboid(cavity_size)
+                                    // build an entirly second cavity, just to get the curve from B[40]: 
+                                    up(cavity_size.z - 0.1)
+                                        attach(BACK, FWD)
+                                            cuboid(cavity_size, rounding=-1 * B[40] * 2, edges=[BOTTOM+FWD]);
+                fwd(B[12] * 4)
+                    up(B[9]) down(size.z/2)
+                        left(B[10]) right(size.x/2)
+                            attach(BACK, "pin-1")
+                                tag("keep")
+                                    _sff_8212_50pin_connector(B);
+            }
+        }
+        children();
+    }
 }
 
+
+module _sff_8212_50pin_connector(b=undef, anchor=CENTER, spin=0, orient=UP) {
+    B = (is_list(b)) ? b : sff_8212_dimensions();
+
+    pin_dimension = [ B[13], B[17], B[21] ]; // oriented up
+
+    size = [
+        (B[13] + B[12] * 24) + B[12],
+        B[21] * 2,
+        (B[11] + B[17]) * 2
+        ];
+    
+    // B[9], B[10] is the position of the upper-left pin (looking towards the front). An anchor
+    // is provided for the upper-left pin, on the BACK of the connector, to aid in positioning.
+    // note that this anchor is rotated 180 degrees, so that applying it to a surface 
+    // (eg, 'attach(BACK, "pin-1")') will orient the attachment correctly without add'l adjustment.
+    anchors = [
+        named_anchor("pin-1", apply(up(B[11]/2) * back(size.y/2) * right(B[12]/2) * left(size.x/2), CENTER), BACK, 180)
+        ];
+
+    attachable(anchor, spin, orient, size=size, anchors=anchors) {
+        cuboid([size.x, size.y/2, size.z*0.75], anchor=FWD)
+            fwd(B[21]/2 - 0.1)
+                xrot(90)
+                    grid_copies(spacing=B[12], n=[25, 2])
+                        cuboid(pin_dimension, anchor=BOTTOM);
+        children();
+    }
+}
 
 
