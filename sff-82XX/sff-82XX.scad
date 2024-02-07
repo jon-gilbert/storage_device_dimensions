@@ -6,7 +6,7 @@
 // FileSummary: 2.5" Disk Drives
 // 
 // Includes:
-//   include <sff-8200.scad>
+//   include <sff-82XX.scad>
 //
 
 include <BOSL2/std.scad>
@@ -104,9 +104,9 @@ module sff_8200(a=undef, bottom_mounts=true, anchor=CENTER, spin=0, orient=UP) {
 //   | A38 | Min | Penetration | 3   | 2 for A1 ≤ 7 mm |
 //   | A41 | Min | Penetration | 2.5 | |
 //   .
-//   ![SFF-8201 Figure 3-1](images/sff-8200/sff-8201-fig3-1.png)
+//   ![SFF-8201 Figure 3-1](images/sff-82XX/sff-8201-fig3-1.png)
 //   .
-//   ![SFF-8201 Figure 3-2](images/sff-8200/sff-8201-fig3-2-detailB.png)
+//   ![SFF-8201 Figure 3-2](images/sff-82XX/sff-8201-fig3-2-detailB.png)
 // Arguments:
 //   a1 = Specify an explicit dimension for measurement A1. Default: `19.05`
 //   a6 = Specify an explicit dimension for measurement A6. Default: `100.45`
@@ -473,5 +473,26 @@ module _sff_8212_50pin_connector(b=undef, anchor=CENTER, spin=0, orient=UP) {
         children();
     }
 }
+
+//sff-8212.scad
+// https://members.snia.org/document/dl/25852
+//  2.5" Form Factor Drive with 50-pin Connector
+
+//sff-8222.scad
+// https://members.snia.org/document/dl/25854
+//  2.5" Form Factor Drive with SCA-2 Connector
+
+
+//sff-8223.scad
+// https://members.snia.org/document/dl/25855
+// 2.5" Form Factor Drive with Serial Attached Connector
+
+//sff-8248.scad
+// https://members.snia.org/document/dl/25858
+//  2.5" Form Factor w/ Combo Connector Inc. USB Micro-B Receptacle
+
+//sff-8252.scad
+// https://members.snia.org/document/dl/25860
+//  2.5" Form Factor Drive with SFF-8784 Connector
 
 

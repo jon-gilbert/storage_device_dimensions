@@ -13,10 +13,10 @@ include $(wildcard *.deps)
 
 %.scad.md: %.stl
 	mkdir -p images/$*
-	openscad-docsgen -D . -m $*.scad
+	openscad-docsgen -D . -f -m $*.scad
 	cp -au $@ $(OUTPUT)
-	-cp -au spec_images/$** images/$*
-	-cp -au images/$** $(OUTPUT)/images
+	-cp -au spec_images/* images/$*
+	-cp -au images/* $(OUTPUT)/images
 
 %.stl: %.scad 
 	openscad -D"MAKE=true" -D'$$fs=0.3' --hardwarnings --export-format stl -o $@ -m make -d $@.gen $<
@@ -30,7 +30,7 @@ include $(wildcard *.deps)
 %.scad: 
 
 clean:
-	rm -rf *.deps *.deps.gen *.stl *.scad.md images
+	rm -rf *.deps *.gen *.stl *.scad.md images
 
 .PHONY: $(MODS)
 
