@@ -1,24 +1,31 @@
 // LibFile: sff-8501.scad
-//   5.25" drive dimensions per SFF-8501 rev 1.1 (1995/06/04).
-//   Reference SFF-8501 dimensions from https://members.snia.org/document/dl/25928
+//   5.25" drive dimensions per SFF-85XX as per 2025/02/01.
+//   See https://www.snia.org/technology-communities/sff/specifications?field_data_field_sff_doc_status=All&combine=sff-85&field_release_date_value_2%5Bvalue%5D%5Bdate%5D=&field_release_date_value%5Bvalue%5D%5Bdate%5D=&items_per_page=20 
+//   for the full set of 5.25" drive dimension specifications.
 // FileGroup: External Bay Drives
 // FileSummary: 5.25" Full-height Drives
 //
 // Includes:
 //   include <sff-85XX.scad>
+//
+
 
 include <BOSL2/std.scad>
 MAKE = false;
 
 
+// Section: SFF-8501
+//   5.25" disk drive dimensions per SFF-8501 rev 1.1 (1995/06/04).
+//   Reference SFF-8501 dimensions from https://members.snia.org/document/dl/25928
+//
 // Function: sff_8501_dimensions()
 // Synopsis: Return a list of 5.25" drive dimensions
 // Usage:
 //   A = sff_8501_dimensions();
 //   A = sff_8501_dimensions(<a1=82.55>);
 // Description:
-//   Returns a list of dimensions as specified in SFF-8501, defining 
-//   a 5.25" disk drive. All measurements returned are in millimeters.
+//   Returns a the dimensions as specified in SFF-8501, defining 
+//   a 5.25" disk drive, as list a `A`. All measurements returned are in millimeters.
 //   Reference table 5-1 from SFF-8501 (https://members.snia.org/document/dl/25931):
 //   .
 //   TABLE 5-1 5.25" DISK DRIVE DIMENSIONS
@@ -40,10 +47,10 @@ MAKE = false;
 //   | A14       | 21.84       | .860    |
 //   * = maximum
 //   .
-//   ![Figure 5-1](images/sff-8501/sff-8501-figure5-1.png)
+//   ![Figure 5-1](images/sff-85XX/sff-8501-figure5-1.png)
 //   .
 //   Where flagged as "Maximum" in the above table, the dimension may be less than 
-//   the stated value (eg for `A1`, the height of the drive, the drive itself may be 
+//   the stated value (eg for A1, the height of the drive, the drive itself may be 
 //   shorter than `82.55`). There aren't any defined minimums.
 //   .
 //   Note that the presence of A2 & A3 in the above table is *not* reflected in 
@@ -153,28 +160,23 @@ module sff_8501(bezel=true, button=true, a=undef, anchor=CENTER, spin=0, orient=
     }
 }
 
+
 if (MAKE)
     sff_8501();
 
-/// LibFile: sff-8551.scad
-/// FileGroup: External Bay Drives
-/// FileSummary: 5.25" Optical Drives
-/// Description:
-///   5.25" drive dimensions per SFF-8551 rev 3.3 (1995/07/27).
-///   Reference SFF-8551 dimensions from https://members.snia.org/document/dl/25931
-///
-/// Includes:
-///   include <sff-8551.scad>
 
-
+// Section: SFF-8551
+//   5.25" optical drive dimensions per SFF-8551 rev 3.3 (1995/07/27).
+//   Reference SFF-8551 dimensions from https://members.snia.org/document/dl/25931
+//
 // Function: sff_8551_dimensions()
 // Synopsis: Return a list of 5.25" drive dimensions
 // Usage:
 //   A = sff_8551_dimensions();
 //   A = sff_8551_dimensions(<a1=41.53>, <a4=202.80>);
 // Description:
-//   Returns a list of dimensions as specified in SFF-8551, defining 
-//   a 5.25" optical drive. All measurements returned are in millimeters.
+//   Returns the dimensions as specified in SFF-8551, defining 
+//   a 5.25" optical drive as a list `A`. All measurements returned are in millimeters.
 //   Reference table 5-1 from SFF-8551 (https://members.snia.org/document/dl/25931):
 //   .
 //   | Dimension |Millimeters| Inches |
@@ -196,10 +198,10 @@ if (MAKE)
 //   | A17       | 5.00      | 0.197  |
 //   * = Maximum
 //   .
-//   ![Figure 5-1](images/sff-8551/sff-8551-figure5-1.png)
+//   ![Figure 5-1](images/sff-85XX/sff-8551-figure5-1.png)
 //   .
 //   Where flagged as "Maximum" in the above table, the dimension may be less than 
-//   the stated value (eg for `A4`, the length of the drive, the drive itself may be 
+//   the stated value (eg for A4, the length of the drive, the drive itself may be 
 //   shorter than `202.80`). There aren't any defined minimums.
 // Arguments:
 //   ---

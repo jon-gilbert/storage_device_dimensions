@@ -107,6 +107,14 @@ module sff_8200(a=undef, bottom_mounts=true, anchor=CENTER, spin=0, orient=UP) {
 //   ![SFF-8201 Figure 3-1](images/sff-82XX/sff-8201-fig3-1.png)
 //   .
 //   ![SFF-8201 Figure 3-2](images/sff-82XX/sff-8201-fig3-2-detailB.png)
+//   .
+//   Where flagged as "Max" in the above table,the dimension may be less 
+//   than the stated value (eg, for A6, the value may be shorter than `100.45`).
+//   There aren't any defined minimums.
+//   .
+//   Note that the above table defines several A1 entries while only one is
+//   present in the diagram. For SFF-8201, those are the only allowable possible 
+//   values for A1.
 // Arguments:
 //   a1 = Specify an explicit dimension for measurement A1. Default: `19.05`
 //   a6 = Specify an explicit dimension for measurement A6. Default: `100.45`
