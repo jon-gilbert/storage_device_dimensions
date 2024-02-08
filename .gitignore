@@ -9,3 +9,4 @@ images
 *.stl.gen
 .source_hashes
 *.scad.md
+*/.openscad_docsgen_rc

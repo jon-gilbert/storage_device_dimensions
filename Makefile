@@ -10,6 +10,7 @@ endif
 all: $(MODS)
 
 $(MODS): $(OUTPUT)
+	cp $(ROOT)/.openscad_docsgen_rc $@
 	$(MAKE) -f $(ROOT)/Makefile.scads -C $@ all
 
 $(OUTPUT):
