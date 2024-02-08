@@ -489,7 +489,7 @@ module _sff_8212_50pin_connector(b=undef, anchor=CENTER, spin=0, orient=UP) {
 
 // Section: SFF-8222
 //   2.5" disk drives with a SCA-2 connector per SFF-8222 rev 2.3 (2004/07/16).
-//   Revised as EIA-720-B 2016/01 at Rev 2.3 dated August 30, 2014
+//   Revised as EIA-720-B 2016/01 at Rev 2.3 dated August 30, 2014.
 //   Reference SFF-8222 dimensions from https://members.snia.org/document/dl/25854
 //
 // Function: sff_8222_dimensions()
@@ -498,7 +498,7 @@ module _sff_8212_50pin_connector(b=undef, anchor=CENTER, spin=0, orient=UP) {
 //   A = sff_8222_dimensions();
 //   A = sff_8222_dimensions(<a2=66.50>);
 // Description:
-//   Returns the dimensions that detail the position of a 50-pin connector on a 2.5" 
+//   Returns the dimensions that detail the position of a SCA-2 connector on a 2.5" 
 //   disk drive, as list `A`. All values are returned in millimeters (mm).
 //   .
 //   Reference https://members.snia.org/document/dl/25854 for SFF-8222.
@@ -586,27 +586,209 @@ function sff_8222_dimensions(a2=66.50) =
 // Example(Render,Med,ScriptUnder): a basic 2.5" disk drive with a connector. The model is rotated 180 degrees, to show its back in this example:
 //   sff_8222(spin=180);
 //
+// Todo:
+//   the depth of the SCA connector is _not_ taken into account for the overall attachable size.
+//
 module sff_8222(a=undef, b=undef, bottom_mounts=true, anchor=CENTER, spin=0, orient=UP) {
     A = (is_list(a)) ? a : sff_8201_dimensions();
     B = (is_list(b)) ? b : sff_8222_dimensions();
 
+    connector_depth = B[8] - A[52];
     size = [ A[4], A[6], A[1] + A[2] - A[3] ];
     anchors = _sff_8201_anchors(A, bottom_mounts);
 
     attachable(anchor, spin, orient, size=size, anchors=anchors) {
-        sff_8201(a=A, bottom_mounts=bottom_mounts)
+        fwd(size.y/2)
+        sff_8201(a=A, bottom_mounts=bottom_mounts, anchor=FWD)
             down(size.z/2)
                 up(B[5]/2)
                     attach(BACK, FWD)
-                        cuboid([B[2], B[8] - A[52], B[5]]);
+                        cuboid([B[2], connector_depth, B[5]]);
         children();
     }
 }
 
 
-//sff-8223.scad
-// https://members.snia.org/document/dl/25855
-// 2.5" Form Factor Drive with Serial Attached Connector
+// Section: SFF-8223
+//   2.5" disk drives with Serial Attached Connector per SFF-8232 rev 2.7 (2004/09/27). 
+//   Revised as EIA-720-B 2016/01 at Rev 2.7 dated August 30, 2014. 
+//   Reference SFF-8223 dimensions from https://members.snia.org/document/dl/25855
+//
+// Function: sff_8223_dimensions()
+// Synopsis: return a list of dimensions for the positioning of a serial attached connector on a 2.5" disk drive
+// Usage:
+//   A = sff_8223_dimensions()
+// Description:
+//   Returns the dimensions that detail the position of a SCA-2 connector on a 2.5" 
+//   disk drive, as list `A`. All values are returned in millimeters (mm).
+//   .
+//   Reference https://members.snia.org/document/dl/25855 for SFF-8223.
+//   .
+//   TABLE 3-1 SERIAL CONNECTOR LOCATION
+//   | Dimension | Millimeters | Inches |
+//   |-----------|------------:|-------:|
+//   | A 1       | 69.85       | 2.750  |
+//   | A 2       | 42.73       | 1.682  |
+//   | A 3       | 33.39       | 1.315  |
+//   | A 4       | 0.40        | 0.016  |
+//   | A 5       | 4.00        | 0.157  |
+//   | A 6       | 0.76        | 0.030  |
+//   | A 7       | 3.50        | 0.138  |
+//   | A 8       | 9.40        | 0.370  |
+//   | A 9       | 0.25        | 0.010  |
+//   | A10       | 1.00        | 0.039  |
+//   | A11       | 4.80        | 0.189  |
+//   | A12       | 0.38        | 0.015  |
+//   | A13       | 13.43       | 0.529  |
+//   | A14       | 37.20       | 1.465  |
+//   | A15       | 1.50        | 0.059  |
+//   | A16       | 1.00        | 0.039  |
+//   | A17       | 1.00        | 0.039  |
+//   | A18       | 0.30        | 0.012  |
+//   | A19       | 1.00        | 0.039  |
+//   | A20       | 0.50        | 0.020  |
+//   .
+//   ![SFF_8223 Figure 3.1](images/sff-82XX/sff-8223-figure3-1.png)
+//   ![SFF_8223 Figure 3.2](images/sff-82XX/sff-8223-figure3-2.png)
+//   .
+// Arguments: `sff_8223_dimensions()` takes no arguments.
+// Continues:
+//   Dimension element `0` is set as `undef`, as it does not appear in table 3-1.
+// Example(NORENDER):
+//   A = sff_8223_dimensions();
+//   echo(A[6]);
+//   // Yields: ECHO: 0.76
+//
+function sff_8223_dimensions() =
+    [
+        undef,  // A0 - not present
+        69.85,  // A1
+        42.73,  // A2
+        33.39,  // A3
+        0.40,   // A4
+        4.00,   // A5
+        0.76,   // A6
+        3.50,   // A7
+        9.40,   // A8
+        0.25,   // A9
+        1.00,   // A10
+        4.80,   // A11
+        0.38,   // A12
+        13.43,  // A13
+        37.20,  // A14
+        1.50,   // A15
+        1.00,   // A16
+        1.00,   // A17
+        0.30,   // A18
+        1.00,   // A19
+        0.50    // A20
+    ];
+
+
+// Module: sff_8223()
+// Synopsis: Model a 2.5" internal disk drive with a serial attached connector
+// Usage:
+//   sff_8223();
+//   sff_8223(<a=undef>, <bottom_mounts=true>, <anchor=CENTER>, <spin=0>, <orient=UP>);
+// Description:
+//   Produces a model of a 2.5" internal disk drive, according to the dimensions of SFF-8223. There are variations allowed in some 
+//   labeled dimensions detailed in SFF-8201: to use those variations you need to call `sff_8201_dimensions()` and pass the 
+//   modified dimension list as an argument `a`. 
+//   .
+//   The SCA-2 connector is not modeled to its specification in `sff_8223()`, only its outer dimensions.
+//   .
+//   Reference https://members.snia.org/document/dl/25855 for SFF-8223.
+//   .
+//   The resulting model from `sff_8223()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//
+// Arguments:
+//   a = A list of dimensions from `sff_8201_dimensions()`. Default: `undef`, in which case `sff_8201_dimensions()` will be called and its values used directly
+//   bottom_mounts = If set to `false`, drives with an A1 dimension that is less than or equal to `7.00` will not have bottom mounting holes. Default: `true`
+//   anchor = Translates the model so that the specified anchor point is located at origin `[0,0,0]`. Default: `CENTER`
+//   spin = Rotates the model this many degrees around the Z-axis after anchoring. Default: `0`
+//   orient = Repositions the model in this direction after spin is applied. Default: `UP`
+// Named Anchors:
+//   Y1, Y2, Y3, Y4 = The four mounting points on the left and right hand sides of the drive, oriented outwards.
+//   X1, X2, X3, X4 = The four mounting points on the bottom of the drive (if they should be present based on SFF-8201), oriented downwards.
+//   CONNECTOR END = The back of the drive, oriented towards the back.
+// Figure(3D,Med): Available anchor points:
+//   expose_anchors() sff_8223() show_anchors(std=false);
+// Example(Render,Med,ScriptUnder): a basic 2.5" disk drive with a connector. The model is rotated 180 degrees, to show its back in this example:
+//   sff_8223(spin=180);
+//
+// Todo:
+//   full y-axis attachable dimension doesn't take into account B18.
+//   the SAS connector from _sff_8223_sas_connector() has only the roughest of its dimensions implemented.
+//
+module sff_8223(a=undef, bottom_mounts=true, anchor=CENTER, spin=0, orient=UP) {
+    A = (is_list(a)) ? a : sff_8201_dimensions();
+    B = sff_8223_dimensions();
+
+    size = [ A[4], A[6], A[1] + A[2] - A[3] ];
+    anchors = _sff_8201_anchors(A, bottom_mounts);
+
+    cutaway_height = A[50] - B[8];
+
+    attachable(anchor, spin, orient, size=size, anchors=anchors) {
+        diff()
+            sff_8201(a=A, bottom_mounts=bottom_mounts) {
+                // cutaway the back connector space
+                right(B[11])
+                    down(size.z/2) up(B[5]/2)
+                        attach(BACK, FWD, overlap=cutaway_height)
+                            tag("remove")
+                                cuboid([B[2], cutaway_height, B[5]]);
+
+                // slot the connector into that space 
+                right(B[11])
+                    fwd(cutaway_height)
+                        down(size.z/2) up(B[5]/2)
+                            attach(BACK, BOTTOM)
+                                tag("keep")
+                                    _sff_8223_sas_connector();
+            }
+        children();
+    }
+}
+
+/// Module: _sff_8223_sas_connector()
+/// Todo: 
+///  The sas connector produced here has the correct *outside* dimenions, but absolutely the wrong *inside* dimensions.
+module _sff_8223_sas_connector(a=undef, b=undef, anchor=CENTER, spin=0, orient=UP) {
+    A = (is_list(a)) ? a : sff_8201_dimensions();
+    B = (is_list(b)) ? b : sff_8223_dimensions();
+    // center along the shape's centerline. offset that with the centerline of SFF-8223 with B[11] for placement.
+    // To ease this WE ASSUME:
+    // * that B[2], B[3], and B[14] are centered respective to each other.
+    // * 
+    cutaway_height = A[50] - B[8];
+    socket_height = cutaway_height + B[18];
+
+    size = [
+        B[2], 
+        A[50] - B[8],
+        B[7] + B[15]
+        ];
+
+    attachable(anchor, spin, orient, size=size) {
+        up(socket_height / 2)
+            union() {
+                difference() {
+                    rect_tube(
+                        h=socket_height,
+                        size=[ B[2], B[5] ],
+                        isize=[ B[2] - (B[16] * 2), B[5] - (B[19] + B[17]) ],
+                        anchor=TOP);
+                    up(0.1)
+                        cuboid([B[14], B[5] + 0.1, cutaway_height/2], rounding=-1, edges=[TOP+RIGHT, TOP+LEFT], anchor=TOP);
+                    up(0.1)
+                        cuboid([B[14], B[5] + 0.1, cutaway_height], rounding=1, edges=[BOTTOM+RIGHT, BOTTOM+LEFT], anchor=TOP);
+                }
+                cuboid([B[3], B[20] * 2, socket_height + 0.1], anchor=TOP);
+            }
+        children();
+    }
+}
 
 //sff-8248.scad
 // https://members.snia.org/document/dl/25858
