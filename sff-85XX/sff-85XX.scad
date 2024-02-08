@@ -113,7 +113,14 @@ function sff_8501_dimensions(a1=82.55) =
 //   SFF-8501 defines the mounting screw specification as 6-32 UNC 2B, and it requires that
 //   screw mounts must accept at least two threads' worth of engagement at each mount point. For the purposes of this model, 
 //   `sff_8501()` uses a diameter of `3.6`, and screw length of `4`.
-//   .
+// Named Anchors:
+//   Y1, Y2, Y3, Y4 = The four mounting points on the left and right hand sides of the drive, oriented outwards.
+//   X1, X2, X3, X4 = The four mounting points on the bottom of the drive, oriented downwards.
+//   CONNECTOR END = The back of the drive, oriented towards the back.
+// Figure(3D,Med): Available anchor points:
+//   expose_anchors() sff_8501() show_anchors(std=false);
+// Continues:
+//   SFF-8501 does not specify a named designation for the screw mounting points: the names used in the anchors in `sff_8501()` are arbitrary, modeled after those used in SFF-8201.
 // Example(Render): a basic 5.25" disk drive:
 //   sff_8501();
 // Example(Render): a half-height 5.25" bay disk drive using a modified set of dimensions from `sff_8501_dimensions()`:
@@ -125,40 +132,50 @@ module sff_8501(bezel=true, button=true, a=undef, anchor=CENTER, spin=0, orient=
     screw_mount_diameter = 3.6;
     screw_mount_length = 4;
     
-    // setting `button` to `true` implies `bezel` must also be `true`:
-    bezel_ = (button) ? true : bezel;
+    size = [ A[5], A[4], A[1] ];
 
-    size = [
-        A[5],
-        A[4],
-        A[1]
-        ];
+    anchors = _sff_8501_anchors(A, fwd_adj=size.y);
 
-    attachable(anchor, spin, orient, size=size) {
+    attachable(anchor, spin, orient, size=size, anchors=anchors) {
         back(size.y / 2)
             difference() {
                 cuboid(size, anchor=BACK);
-
-                xflip_copy() {
-                    // four side mounting points, RIGHT side
-                    move_copies([
-                            [A[5]/2 + 1, -1 * (A[10]),         A[13] - A[1]/2], 
-                            [A[5]/2 + 1, -1 * (A[10]),         A[14] - A[1]/2], 
-                            [A[5]/2 + 1, -1 * (A[10] + A[11]), A[13] - A[1]/2],
-                            [A[5]/2 + 1, -1 * (A[10] + A[11]), A[14] - A[1]/2],
-                            ])
-                        cyl(d=screw_mount_diameter, l=screw_mount_length, orient=LEFT, anchor=BOTTOM);
-                    // two bottom mounting points, RIGHT side
-                    move_copies([
-                            [A[6]/2 + 1, -1 * (A[9]),        -1 * (A[1]/2)],
-                            [A[6]/2 + 1, -1 * (A[9] + A[8]), -1 * (A[1]/2)],
-                            ])
-                        cyl(d=screw_mount_diameter, l=screw_mount_length, orient=UP, anchor=BOTTOM);
+                for (anchor=anchors) {
+                    prefix = substr(anchor[0], 0, 1);
+                    if (in_list(prefix, ["X", "Y"]))
+                        move(fwd(size.y/2, p=anchor[1]))
+                            cyl(d=screw_mount_diameter, l=screw_mount_length, orient=anchor[2], anchor=TOP);
                 }
             }
         children();
     }
 }
+
+
+/// assumptions - 
+///   * the drive is anchored at BACK
+///   * fwd_adj is the amount of forward bezel that extends ahead of the drive
+function _sff_8501_anchors(A, fwd_adj=0) =
+    let(
+        hfw = fwd_adj / 2 
+    )
+    [
+        named_anchor("CONNECTOR END", [0, hfw, 0], BACK, 0),
+        //
+        named_anchor("Y1", [      A[5]/2,   -1 * (A[10] - hfw),           A[13] - A[1]/2 ], RIGHT, 0),
+        named_anchor("Y2", [      A[5]/2,   -1 * (A[10] + A[11] - hfw),   A[13] - A[1]/2 ], RIGHT, 0),
+        named_anchor("Y3", [      A[5]/2,   -1 * (A[10] - hfw),           A[14] - A[1]/2 ], RIGHT, 0),
+        named_anchor("Y4", [      A[5]/2,   -1 * (A[10] + A[11] - hfw),   A[14] - A[1]/2 ], RIGHT, 0),
+        named_anchor("Y5", [ -1 * A[5]/2,   -1 * (A[10] - hfw),           A[13] - A[1]/2 ], LEFT, 0),
+        named_anchor("Y6", [ -1 * A[5]/2,   -1 * (A[10] + A[11] - hfw),   A[13] - A[1]/2 ], LEFT, 0),
+        named_anchor("Y7", [ -1 * A[5]/2,   -1 * (A[10] - hfw),           A[14] - A[1]/2 ], LEFT, 0),
+        named_anchor("Y8", [ -1 * A[5]/2,   -1 * (A[10] + A[11] - hfw),   A[14] - A[1]/2 ], LEFT, 0),
+        //
+        named_anchor("X1", [      A[6]/2,   -1 * (A[9] - hfw),            -1 * (A[1]/2) ], DOWN, 0),
+        named_anchor("X2", [      A[6]/2,   -1 * (A[9] + A[8] - hfw),     -1 * (A[1]/2) ], DOWN, 0),
+        named_anchor("X3", [ -1 * A[6]/2,   -1 * (A[9] - hfw),            -1 * (A[1]/2) ], DOWN, 0),
+        named_anchor("X4", [ -1 * A[6]/2,   -1 * (A[9] + A[8] - hfw),     -1 * (A[1]/2) ], DOWN, 0),
+    ];
 
 
 if (MAKE)
@@ -266,6 +283,14 @@ function sff_8551_dimensions(a1=41.53, a4=202.80) =
 //   thread pitch of `1` making the minimum depth `2`; `sff_8551()` uses a screw length of `4`.
 //   SFF-8551 also does not define the dimensions of the forward button beyond its protruding distance relative to the front of the drive bay. `sff_8551()` makes 
 //   a generalized assumption regarding the button's size and placement. 
+// Named Anchors:
+//   Y1, Y2, Y3, Y4 = The four mounting points on the left and right hand sides of the drive, oriented outwards.
+//   X1, X2, X3, X4 = The four mounting points on the bottom of the drive, oriented downwards.
+//   CONNECTOR END = The back of the drive, oriented towards the back.
+// Figure(3D,Med): Available anchor points:
+//   expose_anchors() sff_8551() show_anchors(std=false);
+// Continues:
+//   SFF-8551 does not specify a named designation for the screw mounting points: the names used in the anchors in `sff_8551()` are arbitrary, modeled after those used in SFF-8201.
 // Example(Render): a basic 5.25" optical drive:
 //   sff_8551();
 // Example(Render): a roughly-carved-out 5.25" drive bay mount:
@@ -289,16 +314,19 @@ module sff_8551(bezel=true, button=true, a=undef, anchor=CENTER, spin=0, orient=
     // setting `button` to `true` implies `bezel` must also be `true`:
     bezel_ = (button) ? true : bezel;
 
-    size = [
-        (bezel_) ? A[3] : A[5], 
-        A[4] + ((button) ? A[16] : ((bezel_) ? A[17] : 0)), 
-        A[2]
-        ];
+    fwd_adj = (button) ? A[16] : (bezel_) ? A[17] : 0;
 
-    attachable(anchor, spin, orient, size=size) {
-        fwd(A[4] - size.y/2)
+    size = [ (bezel_) ? A[3] : A[5], A[4] + fwd_adj, A[2] ];
+
+    anchors = _sff_8551_anchors(A, fwd_adj=size.y);
+
+    attachable(anchor, spin, orient, size=size, anchors=anchors) {
+        back(size.y / 2)
             difference() {
-                cuboid([A[5], A[4], A[1]], anchor=FWD)
+                // because the positioning of elements relative to the body of the drive
+                // changes from SFF-8501 (from the back) to SFF-8551 (from the front), 
+                // we can't just modify sff_8501(), we have to create it from scratch.
+                cuboid([ A[5], A[4], A[1] ], anchor=BACK)
                     if (bezel_)
                         attach(FWD, BACK)
                             cuboid([A[3], A[17], A[2]])
@@ -307,26 +335,44 @@ module sff_8551(bezel=true, button=true, a=undef, anchor=CENTER, spin=0, orient=
                                         right(A[3]/3)
                                             attach(FWD, BACK)
                                                 cuboid([20, (A[16] - A[17]), 5]);
-
-                xflip_copy() {
-                    // four side mounting points, RIGHT side
-                    move_copies([
-                            [A[5]/2 + 1, A[10],         A[13] - A[1]/2], 
-                            [A[5]/2 + 1, A[10],         A[14] - A[1]/2], 
-                            [A[5]/2 + 1, A[10] + A[11], A[13] - A[1]/2],
-                            [A[5]/2 + 1, A[10] + A[11], A[14] - A[1]/2],
-                            ])
-                        cyl(d=screw_mount_diameter, l=screw_mount_length, orient=LEFT, anchor=BOTTOM);
-                    // two bottom mounting points, RIGHT side
-                    move_copies([
-                            [A[6]/2, A[9],        -1 * (A[2]/2)],
-                            [A[6]/2, A[9] + A[8], -1 * (A[2]/2)],
-                            ])
-                        cyl(d=screw_mount_diameter, l=screw_mount_length, orient=UP, anchor=BOTTOM);
+                for (anchor=anchors) {
+                    prefix = substr(anchor[0], 0, 1);
+                    if (in_list(prefix, ["X", "Y"])) 
+                        move(fwd(size.y/2, p=anchor[1]))
+                            cyl(d=screw_mount_diameter, l=screw_mount_length, orient=anchor[2], anchor=TOP);
                 }
             }
         children();
     }
 }
+
+
+/// cumbersome standard change that reverses how screw mounts are placed from its parent. 
+/// This may not have been SFF's brightest moment.
+/// assumptions - 
+///   * the drive is anchored at BACK
+///   * fwd_adj is the amount of forward bezel that extends ahead of the drive
+function _sff_8551_anchors(A, fwd_adj=0) =
+    let(
+        hfw = fwd_adj / 2 
+    )
+    [
+        named_anchor("CONNECTOR END", [0, hfw, 0], BACK, 0),
+        //
+        named_anchor("Y1", [      A[5]/2,   -1 * (hfw - A[10]),           A[13] - A[1]/2 ], RIGHT, 0),
+        named_anchor("Y2", [      A[5]/2,   -1 * (hfw - (A[10] + A[11])),   A[13] - A[1]/2 ], RIGHT, 0),
+        named_anchor("Y3", [      A[5]/2,   -1 * (hfw - A[10]),           A[14] - A[1]/2 ], RIGHT, 0),
+        named_anchor("Y4", [      A[5]/2,   -1 * (hfw - (A[10] + A[11])),   A[14] - A[1]/2 ], RIGHT, 0),
+        named_anchor("Y5", [ -1 * A[5]/2,   -1 * (hfw - A[10]),           A[13] - A[1]/2 ], LEFT, 0),
+        named_anchor("Y6", [ -1 * A[5]/2,   -1 * (hfw - (A[10] + A[11])),   A[13] - A[1]/2 ], LEFT, 0),
+        named_anchor("Y7", [ -1 * A[5]/2,   -1 * (hfw - A[10]),           A[14] - A[1]/2 ], LEFT, 0),
+        named_anchor("Y8", [ -1 * A[5]/2,   -1 * (hfw - (A[10] + A[11])),   A[14] - A[1]/2 ], LEFT, 0),
+        //
+        named_anchor("X1", [      A[6]/2,   -1 * (hfw - A[9]),            -1 * (A[1]/2) ], DOWN, 0),
+        named_anchor("X2", [      A[6]/2,   -1 * (hfw - (A[9] + A[8])),     -1 * (A[1]/2) ], DOWN, 0),
+        named_anchor("X3", [ -1 * A[6]/2,   -1 * (hfw - A[9]),            -1 * (A[1]/2) ], DOWN, 0),
+        named_anchor("X4", [ -1 * A[6]/2,   -1 * (hfw - (A[9] + A[8])),     -1 * (A[1]/2) ], DOWN, 0),
+    ];
+
 
 
