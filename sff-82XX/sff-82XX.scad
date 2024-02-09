@@ -599,11 +599,11 @@ module sff_8222(a=undef, b=undef, bottom_mounts=true, anchor=CENTER, spin=0, ori
 
     attachable(anchor, spin, orient, size=size, anchors=anchors) {
         fwd(size.y/2)
-        sff_8201(a=A, bottom_mounts=bottom_mounts, anchor=FWD)
-            down(size.z/2)
-                up(B[5]/2)
-                    attach(BACK, FWD)
-                        cuboid([B[2], connector_depth, B[5]]);
+            sff_8201(a=A, bottom_mounts=bottom_mounts, anchor=FWD)
+                down(size.z/2)
+                    up(B[5]/2)
+                        attach(BACK, FWD)
+                            cuboid([B[2], connector_depth, B[5]]);
         children();
     }
 }
@@ -790,9 +790,190 @@ module _sff_8223_sas_connector(a=undef, b=undef, anchor=CENTER, spin=0, orient=U
     }
 }
 
-//sff-8248.scad
-// https://members.snia.org/document/dl/25858
-//  2.5" Form Factor w/ Combo Connector Inc. USB Micro-B Receptacle
+
+// Section: SFF-8248
+//   2.5" Form Factor w/ Combo Connector Inc. USB Micro-B Receptacle per sFF-8248 rev 1.0 (2014/09/30).
+//   Standardized as EIA-720-B 2016/01 at Rev 1.0 dated August 30, 2014.
+//   Reference SFF-8248 dimensions from https://members.snia.org/document/dl/25858
+//
+// Function: sff_8248_dimensions()
+// Synopsis: return a list of dimensions for the positioning of a USB Micro-B port on a 2.5" disk drive
+// Usage:
+//   A = sff_8248_dimensions();
+// Description:
+//   Returns the dimensions that detail the position of a USB Micro-B connector on a 2.5" 
+//   disk drive, as list `A`. All values are returned in millimeters (mm).
+//   .
+//   Reference https://members.snia.org/document/dl/25858 for SFF-8248.
+//   .
+//   TABLE 3-1 USB 3.0 COMBINATION CONNECTOR LOCATION
+//   | Dimension   | Millimeters | Inches |
+//   |-------------|------------:|-------:|
+//   | A 1         |       69.85 |  2.750 |
+//   | A 2         |       47.30 |  1.862 |
+//   | A 3         |       36.52 |  1.438 |
+//   | A 4         |       0.40  |  0.016 |
+//   | A 5         |       4.00  |  0.157 |
+//   | A 6         |       0.76  |  0.030 |
+//   | A 7         |       3.50  |  0.138 |
+//   | A 8         |       9.40  |  0.370 |
+//   | A 9         |       0.25  |  0.010 |
+//   | A10         |       1.00  |  0.039 |
+//   | A11         |       3.23  |  0.127 |
+//   | A12         |       0.38  |  0.015 |
+//   | A13         |       13.43 |  0.529 |
+//   | A14         |       41.34 |  1.628 |
+//   | A15         |       2.50  |  0.098 |
+//   | A16         |       1.00  |  0.039 |
+//   | A17         |       1.00  |  0.039 |
+//   | A18         |       0.30  |  0.012 |
+//   | A19         |       1.00  |  0.039 |
+//   | A20         |       0.20  |  0.008 |
+//   | A21         |       0.32  |  0.013 |
+//   .
+//   ![SFF-8248 Figure 3.2](images/sff-82XX/sff-8248-figure3-2.png)
+//   .
+// Arguments: `sff_8248_dimensions()` takes no arguments.
+// Continues:
+//   Dimension element `0` is set as `undef`, as it does not appear in table 3-1.
+// Example(NORENDER):
+//   A = sff_8248_dimensions();
+//   echo(A[2]);
+//   // Yields: ECHO: 47.30
+//
+function sff_8248_dimensions() =
+    [
+        undef, // A0 - not present
+        69.85, // A1
+        47.30, // A2
+        36.52, // A3
+        0.40,  // A4
+        4.00,  // A5
+        0.76,  // A6
+        3.50,  // A7
+        9.40,  // A8
+        0.25,  // A9
+        1.00,  // A10
+        3.23,  // A11
+        0.38,  // A12
+        13.43, // A13
+        41.34, // A14
+        2.50,  // A15
+        1.00,  // A16
+        1.00,  // A17
+        0.30,  // A18
+        1.00,  // A19
+        0.20,  // A20
+        0.32   // A21
+    ];
+
+
+// Module: sff_8248()
+// Synopsis: Model a 2.5" internal disk drive with a serial attached connector
+// Usage:
+//   sff_8248();
+//   sff_8248(<a=undef>, <bottom_mounts=true>, <anchor=CENTER>, <spin=0>, <orient=UP>);
+// Description:
+//   Produces a model of a 2.5" internal disk drive, according to the dimensions of SFF-8248. There are variations allowed in some 
+//   labeled dimensions detailed in SFF-8201: to use those variations you need to call `sff_8201_dimensions()` and pass the 
+//   modified dimension list as an argument `a`. 
+//   .
+//   The USB Mini-b connector is not modeled to its specification in `sff_8248()`, only its outer dimensions.
+//   .
+//   Reference https://members.snia.org/document/dl/25855 for SFF-8248.
+//   .
+//   The resulting model from `sff_8248()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//
+// Arguments:
+//   a = A list of dimensions from `sff_8201_dimensions()`. Default: `undef`, in which case `sff_8201_dimensions()` will be called and its values used directly
+//   bottom_mounts = If set to `false`, drives with an A1 dimension that is less than or equal to `7.00` will not have bottom mounting holes. Default: `true`
+//   anchor = Translates the model so that the specified anchor point is located at origin `[0,0,0]`. Default: `CENTER`
+//   spin = Rotates the model this many degrees around the Z-axis after anchoring. Default: `0`
+//   orient = Repositions the model in this direction after spin is applied. Default: `UP`
+// Named Anchors:
+//   Y1, Y2, Y3, Y4 = The four mounting points on the left and right hand sides of the drive, oriented outwards.
+//   X1, X2, X3, X4 = The four mounting points on the bottom of the drive (if they should be present based on SFF-8201), oriented downwards.
+//   CONNECTOR END = The back of the drive, oriented towards the back.
+// Figure(3D,Med): Available anchor points:
+//   expose_anchors() sff_8248() show_anchors(std=false);
+// Example(Render,Med,ScriptUnder): a basic 2.5" disk drive with a connector. The model is rotated 180 degrees, to show its back in this example:
+//   sff_8248(spin=180);
+//
+// Todo:
+//   full y-axis attachable dimension doesn't take into account B18.
+//   the USB Micro-B connector from _sff_8248_sas_connector() has only the roughest of its dimensions implemented.
+//
+module sff_8248(a=undef, bottom_mounts=true, anchor=CENTER, spin=0, orient=UP) {
+    A = (is_list(a)) ? a : sff_8201_dimensions();
+    B = sff_8248_dimensions();
+
+    cutaway_depth = A[50] - B[8];
+
+    size = [ A[4], A[6] + B[18], A[1] + A[2] - A[3] ];
+
+    anchors = _sff_8201_anchors(A, bottom_mounts);
+
+    attachable(anchor, spin, orient, size=size, anchors=anchors) {
+        fwd(size.y/2)
+            diff()
+                sff_8201(a=A, bottom_mounts=bottom_mounts, anchor=FWD)
+                    right(B[11]) {
+                        tag("remove") {
+                            down(A[1]/2) up(B[5]/2) 
+                                attach(BACK, FWD, overlap=cutaway_depth)
+                                    cuboid([B[2], cutaway_depth, B[5]]);
+                            down(A[1]/2) up((B[7] + B[15])/2) 
+                                attach(BACK, FWD, overlap=cutaway_depth)
+                                    cuboid([B[14], cutaway_depth, B[7] + B[15]]);
+                            }
+                        down(A[1]/2) up(B[5]/2)
+                            attach(BACK, BOTTOM, overlap=cutaway_depth) 
+                                tag("keep")
+                                    _sff_8248_connector(a=A, b=B);
+                    }
+        children();
+    }
+}
+
+
+module _sff_8248_connector(a=undef, b=undef, anchor=CENTER, spin=0, orient=UP) {
+    A = (is_list(a)) ? a : sff_8201_dimensions();
+    B = (is_list(b)) ? b : sff_8248_dimensions();
+    
+    cutaway_height = A[50] - B[8];
+    socket_height = cutaway_height + B[18];
+
+    size = [B[2], B[5], socket_height];
+    anchors = [];
+
+    attachable(anchor, spin, orient, size=size, anchors=anchors) {
+        up(socket_height / 2)
+        union() {
+            difference() {
+                rect_tube(h=socket_height,
+                    size=[B[2], B[5]],
+                    isize=[B[2] - B[16] * 2, B[5] - (B[17] + B[19])],
+                    anchor=TOP);
+                cuboid([B[14], B[5] + 0.1, socket_height + 0.01], 
+                    rounding=1, edges=[BOTTOM+RIGHT, BOTTOM+LEFT], 
+                    anchor=TOP);
+                up(0.01)
+                    cuboid([B[14], B[5] + 0.1, cutaway_height/2],
+                        rounding=-1, edges=[TOP+RIGHT, TOP+LEFT], 
+                        anchor=TOP);
+            }
+            cuboid([B[3], 1, socket_height], anchor=TOP);
+            right(B[3]/3)
+                rect_tube(h=socket_height,
+                    size=[B[3]/3, B[7]/1.5],
+                    wall=0.5,
+                    anchor=TOP
+                    );
+        }
+        children();
+    }
+}
+
 
 //sff-8252.scad
 // https://members.snia.org/document/dl/25860
