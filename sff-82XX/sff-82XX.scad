@@ -975,8 +975,141 @@ module _sff_8248_connector(a=undef, b=undef, anchor=CENTER, spin=0, orient=UP) {
 }
 
 
-//sff-8252.scad
-// https://members.snia.org/document/dl/25860
-//  2.5" Form Factor Drive with SFF-8784 Connector
+// Section: SFF-8252
+//   2.5" Form Factor with SFF-8748 connector per SFF-8248 rev 0.5 (2014/08/30).
+//   Standarded as EIA-720-B 2016/01 at Rev 0.5 dated August 30, 2014. 
+//   Reference SFF-8252 dimensions from https://members.snia.org/document/dl/25860
+//
+// Function: sff_8252_dimensions()
+// Synopsis: return a list of dimensions for the positioning of a SFF-8748 connector on a 2.5" disk drive
+// Usage:
+//   A = sff_8252_dimensions();
+//   A = sff_8252_dimensions(<a9=4.80>, <a10=6.28>, <a11=1.60>, <a12=2.40>);
+// Description:  
+//   Returns the dimensions that detail the position of SFF8748 connector on a 2.5" 
+//   disk drive, as list `A`. All values are returned in millimeters (mm).
+//   .
+//   Reference https://members.snia.org/document/dl/25860 for SFF-8252.
+//   .
+//   TABLE 3-1 FORM FACTOR DIMENSIONS
+//   | Dimension |     | Millimeters | Inches |
+//   |-----------|-----|------------:|-------:|
+//   | A 1       |     | 69.85       | 2.750  |
+//   | A 2       |     | 1.00        | 0.039  |
+//   | A 3       |     | 9.15        | 0.360  |
+//   | A 4       |     | 0.60        | 0.024  |
+//   | A 5       |     | 0.25        | 0.010  |
+//   | A 6       |     | 2.60        | 0.102  |
+//   | A 7       |     | 10.40       | 0.409  |
+//   | A 8       |     | 28.25       | 1.112  |
+//   | A 9       | Min | 4.80        | 0.189  |
+//   | A10       | Min | 6.28        | 0.247  |
+//   | A11       | Min | 1.60        | 0.063  |
+//   | A12       | Min | 2.40        | 0.094  |
+//   | A13       |     | 3.90        | 0.154  |
+//   | A14       |     | 0.40        | 0.016  |
+//   | A15       |     | 100.3       | 3.949  |
+//   .
+//   ![SFF-8252 Figure 3-1](images/sff-82XX/sff-8252-figure3-1.png)
+//   .
+// Arguments:
+//   a9 = Specify a value for A9, which has a minimum of `4.80`. Default: `4.80`
+//   a10 = Specify a value for A10, which has a minimum of `6.28`. Default: `6.28`
+//   a11 = Specify a value for A11, which has a minimum of `1.60`. Default: `1.60`
+//   a12 =Specify a value for A12, which has a minimum of `2.40`. Default: `2.40`
+// Continues:
+//   It is an error to specify a value for A9, A10, A11, & A12 that is below their stated 
+//   minimum. 
+//   Dimension element `0` is set as `undef`, as it does not appear in table 3-1. 
+//
+// Example(NORENDER):
+//   A = sff_8252_dimensions();
+//   echo(A[15]);
+//   // Yields: ECHO: 100.3
+//
+function sff_8252_dimensions(a9=4.80, a10=6.28, a11=1.60, a12=2.40) =
+    assert(a9 >= 4.80, "Value for A9 must be greater than or equal to 4.80")
+    assert(a10 >= 6.28, "Value for A10 must be greater than or equal to 6.28")
+    assert(a11 >= 1.60, "Value for A11 must be greater than or equal to 1.60")
+    assert(a12 >= 2.40, "Value for A12 must be greater than or equal to 2.40")
+    [
+        undef,  // A0 - not present
+        69.85,  // A1
+        1.00,   // A2
+        9.15,   // A3
+        0.60,   // A4
+        0.25,   // A5
+        2.60,   // A6
+        10.40,  // A7
+        28.25,  // A8
+        4.80,   // A9
+        6.28,   // A10
+        1.60,   // A11
+        2.40,   // A12
+        3.90,   // A13
+        0.40,   // A14
+        100.3   // A15
+    ];
+
+
+// m
+// Module: sff_8252()
+// Synopsis: Model a 2.5" internal disk drive with a 50-pin connector
+// Usage:
+//   sff_8252();
+//   sff_8252(<a=undef>, <b=undef>, <bottom_mounts=true>, <anchor=CENTER>, <spin=0>, <orient=UP>);
+// Description:
+//   Produces a model of a 2.5" internal disk drive, according to the dimensions of SFF-8252. There are variations allowed in some 
+//   labeled dimensions detailed in SFF-8201: to use those variations you need to call `sff_8201_dimensions()` and pass the 
+//   modified dimension list as an argument `a`. There are variations also allowed in SFF-8252: to use those variations you need to 
+//   call `sff_8252_dimensions()` and pass the modified dimenion list as an argument `b`.  
+//   .
+//   Reference https://members.snia.org/document/dl/25860 for SFF-8252.
+//   .
+//   The resulting model from `sff_8201()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//
+// Arguments:
+//   a = A list of dimensions from `sff_8201_dimensions()`. Default: `undef`, in which case `sff_8201_dimensions()` will be called and its values used directly
+//   b = A list of dimensions from `sff_8252_dimensions()`. Default: `undef`, in which case `sff_8252_dimensions()` will be called and its values used directly
+//   bottom_mounts = If set to `false`, drives with an A1 dimension that is less than or equal to `7.00` will not have bottom mounting holes. Default: `true`
+//   anchor = Translates the model so that the specified anchor point is located at origin `[0,0,0]`. Default: `CENTER`
+//   spin = Rotates the model this many degrees around the Z-axis after anchoring. Default: `0`
+//   orient = Repositions the model in this direction after spin is applied. Default: `UP`
+// Named Anchors:
+//   Y1, Y2, Y3, Y4 = The four mounting points on the left and right hand sides of the drive, oriented outwards.
+//   X1, X2, X3, X4 = The four mounting points on the bottom of the drive (if they should be present based on SFF-8201), oriented downwards.
+//   CONNECTOR END = The back of the drive, oriented towards the back.
+// Figure(3D,Med): Available anchor points:
+//   expose_anchors() sff_8252() show_anchors(std=false);
+// Example(Render,Med,ScriptUnder): a basic 2.5" disk drive with a connector. The model is rotated 180 degrees, to show its back in this example:
+//   sff_8252(spin=180);
+//
+module sff_8252(a=undef, b=undef, bottom_mounts=true, anchor=CENTER, spin=0, orient=UP) {
+    A = (is_list(a)) ? a : sff_8201_dimensions();
+    B = (is_list(b)) ? b : sff_8252_dimensions();
+    
+    size = [ A[4], A[6], A[1] + A[2] - A[3] ];
+    
+    connector_cutaway = [B[10] * 2, size.z, B[13] + B[9]];
+    
+    anchors = _sff_8201_anchors(A, bottom_mounts);
+
+    attachable(anchor, spin, orient, size=size, anchors=anchors) {
+        diff()
+            sff_8201(a=A, bottom_mounts=bottom_mounts) {
+                left(size.x/2)
+                    right(connector_cutaway.x/2)
+                        attach(BACK, BOTTOM, overlap=connector_cutaway.z)
+                            tag("remove")
+                                cuboid(connector_cutaway);
+                up(B[6]) down(A[1]/2)
+                    left(B[8])
+                        attach(BACK, BOTTOM, overlap=connector_cutaway.z)
+                            tag("keep")
+                                cuboid([B[3], B[2], B[9]]);
+            }
+        children();
+    }
+}
 
 
