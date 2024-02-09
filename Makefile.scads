@@ -32,7 +32,7 @@ include $(wildcard *.deps)
 clean:
 	rm -rf *.deps *.gen *.stl *.scad.md images
 
-.PHONY: $(MODS)
+.PHONY:
 
 .SECONDARY:
 
