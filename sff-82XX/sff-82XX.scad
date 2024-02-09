@@ -566,7 +566,7 @@ function sff_8222_dimensions(a2=66.50) =
 //   .
 //   The SCA-2 connector is not modeled to its specification in `sff_8222()`, only its outer dimensions.
 //   .
-//   Reference https://members.snia.org/document/dl/25852 for SFF-8222.
+//   Reference https://members.snia.org/document/dl/25854 for SFF-8222.
 //   .
 //   The resulting model from `sff_8222()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
 //
