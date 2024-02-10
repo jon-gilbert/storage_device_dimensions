@@ -15,6 +15,7 @@ $(MODS): $(OUTPUT)
 
 $(OUTPUT):
 	mkdir -p $(OUTPUT)/images
+	mkdir -p $(OUTPUT)/stls
 
 clean:
 	for d in $(MODS); do $(MAKE) -f $(ROOT)/Makefile -C $$d clean; done

@@ -1,13 +1,17 @@
 
 export ROOT ?= $(abspath $(shell pwd)/..)
 export OUTPUT ?= $(ROOT)/output
-SCAD_MDS = $(addsuffix .md, $(wildcard *.scad))
+SCADS = $(wildcard *.scad)
+SCAD_MODULES != grep "module sff_" $(SCADS) | awk -F\( '{print $$1}' | awk '{print $$2}'
+SCAD_MDS = $(addsuffix .md, $(SCADS))
+STLS = $(addprefix stls/, $(addsuffix .stl, $(SCAD_MODULES)))
+STL_INCLUDES=$(foreach s,$(SCADS),include <$(s)>\n)
 ifeq ($(SCAD_MDS),)
 $(info Warning: no SCAD markdown targets found. This Makefile.scads is for individual module directories. Did you mean to use Makefile?)
 endif
 
 
-all: $(SCAD_MDS) 
+all: $(SCAD_MDS) $(STLS)
 
 include $(wildcard *.deps)
 
@@ -17,6 +21,11 @@ include $(wildcard *.deps)
 	cp -au $@ $(OUTPUT)
 	-cp -au spec_images/* images/$*
 	-cp -au images/* $(OUTPUT)/images
+
+stls/%.stl: $(SCADS)
+	mkdir -p stls
+	echo "$(STL_INCLUDES)\n\$$fs=0.3;\n$*();\n" | openscad -q -o $@ -
+	cp -au $@ $(OUTPUT)/stls/
 
 %.stl: %.scad 
 	openscad -D"MAKE=true" -D'$$fs=0.3' --hardwarnings --export-format stl -o $@ -m make -d $@.gen $<
@@ -30,9 +39,9 @@ include $(wildcard *.deps)
 %.scad: 
 
 clean:
-	rm -rf *.deps *.gen *.stl *.scad.md images
+	rm -rf *.deps *.gen *.stl *.scad.md images stls
 
-.PHONY:
+.PHONY: stls
 
 .SECONDARY:
 

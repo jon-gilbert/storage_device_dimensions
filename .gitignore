@@ -4,6 +4,7 @@
 output
 docs
 images
+stls
 *.stl
 *.stl.deps
 *.stl.gen
