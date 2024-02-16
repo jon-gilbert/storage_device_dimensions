@@ -21,7 +21,7 @@ clean:
 	for d in $(MODS); do $(MAKE) -f $(ROOT)/Makefile -C $$d clean; done
 	rm -rf $(OUTPUT)
 
-.PHONY: $(MODS) scads
+.PHONY: $(MODS) clean
 
 .SECONDARY:
 

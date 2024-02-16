@@ -41,7 +41,7 @@ stls/%.stl: $(SCADS)
 clean:
 	rm -rf *.deps *.gen *.stl *.scad.md images stls
 
-.PHONY: stls
+.PHONY: clean
 
 .SECONDARY:
 
