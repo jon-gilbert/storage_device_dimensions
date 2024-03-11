@@ -1,6 +1,6 @@
-// LibFile: sff-8501.scad
+// LibFile: sff-85XX.scad
 //   5.25" drive dimensions per SFF-85XX as per 2025/02/01.
-//   See https://www.snia.org/technology-communities/sff/specifications?field_data_field_sff_doc_status=All&combine=sff-85&field_release_date_value_2%5Bvalue%5D%5Bdate%5D=&field_release_date_value%5Bvalue%5D%5Bdate%5D=&items_per_page=20 
+//   See [these SFF specifications](https://www.snia.org/technology-communities/sff/specifications?field_data_field_sff_doc_status=All&combine=sff-85&field_release_date_value_2%5Bvalue%5D%5Bdate%5D=&field_release_date_value%5Bvalue%5D%5Bdate%5D=&items_per_page=20)
 //   for the full set of 5.25" drive dimension specifications.
 // FileGroup: External Bay Drives
 // FileSummary: 5.25" Full-height Drives
@@ -8,7 +8,6 @@
 // Includes:
 //   include <sff-85XX.scad>
 //
-
 
 include <BOSL2/std.scad>
 MAKE = false;
@@ -63,6 +62,7 @@ MAKE = false;
 //   a1 = Set a value smaller than the above-defined maximum. Default: `82.55`
 // Continues:
 //   It is an error to specify a value for A1 that is not between `0` and its listed maximum value.
+//   .
 //   Dimension elements `0` and `12` are set as `undef`, as they do not appear in table 5-1. 
 // Example(NORENDER):
 //   A = sff_8501_dimensions();
@@ -152,6 +152,7 @@ module sff_8501(bezel=true, button=true, a=undef, anchor=CENTER, spin=0, orient=
 }
 
 
+/// Function: _sff_8501_anchors()
 /// assumptions - 
 ///   * the drive is anchored at BACK
 ///   * fwd_adj is the amount of forward bezel that extends ahead of the drive
@@ -226,6 +227,7 @@ if (MAKE)
 //   a4 = Set a value smaller than the above-defined maximum. Default: `202.80`
 // Continues:
 //   It is an error to specify a value for A1 and A4 that is not between `0` its listed maximum value.
+//   .
 //   Dimension elements `0`, `12`, and `15` are set as `undef`, as they do not appear in table 5-1. 
 // Example(NORENDER):
 //   A = sff_8551_dimensions();
@@ -347,6 +349,7 @@ module sff_8551(bezel=true, button=true, a=undef, anchor=CENTER, spin=0, orient=
 }
 
 
+/// Function: _sff_8551_anchors()
 /// cumbersome standard change that reverses how screw mounts are placed from its parent. 
 /// This may not have been SFF's brightest moment.
 /// assumptions - 
@@ -373,6 +376,5 @@ function _sff_8551_anchors(A, fwd_adj=0) =
         named_anchor("X3", [ -1 * A[6]/2,   -1 * (hfw - A[9]),            -1 * (A[1]/2) ], DOWN, 0),
         named_anchor("X4", [ -1 * A[6]/2,   -1 * (hfw - (A[9] + A[8])),     -1 * (A[1]/2) ], DOWN, 0),
     ];
-
 
 
