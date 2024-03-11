@@ -1,6 +1,6 @@
-// LibFile: sff-8200.scad
+// LibFile: sff-82XX.scad
 //   2.5" disk drive dimensions per SFF-82XX as per 2024/02/01. 
-//   See https://www.snia.org/technology-communities/sff/specifications?field_data_field_sff_doc_status=All&combine=sff-82&field_release_date_value_2%5Bvalue%5D%5Bdate%5D=&field_release_date_value%5Bvalue%5D%5Bdate%5D=&items_per_page=20 
+//   See [these SFF specifications](https://www.snia.org/technology-communities/sff/specifications?field_data_field_sff_doc_status=All&combine=sff-82&field_release_date_value_2%5Bvalue%5D%5Bdate%5D=&field_release_date_value%5Bvalue%5D%5Bdate%5D=&items_per_page=20) 
 //   for the full set of 2.5" drive dimension specifications.
 // FileGroup: Internal Bay Drives
 // FileSummary: 2.5" Disk Drives
@@ -122,8 +122,7 @@ module sff_8200(a=undef, bottom_mounts=true, anchor=CENTER, spin=0, orient=UP) {
 //   It is an error to specify a value for A1 that is not listed in SFF-8200. It is an error 
 //   to specify a value for A6 that exceeds its listed maximum, or that is not greater than zero.
 //   .
-///   Dimension elements `0`, `7` - `9`, and `15` are set as `undef`, as they do not appear in table 3-1. 
-//   Several dimension elements are not preset in table 3-1, and will return as `undef` in the position 
+//   Several dimension elements are not present in table 3-1, and will return as `undef` in the position 
 //   list returned. They are: `0 7 8 9 13 14 15 16 17 18 19 20 21 22 34 35 36 42 43 44 45 46 47 48 49`.
 //   .
 //   SFF-8201 defines A26 as `M3`, which is interpreted by `sff_8201_dimensions()` as the diameter 
@@ -345,7 +344,8 @@ if (MAKE)
 // Continues:
 //   It is an error to specify a value for A34, A36, A39, & A40 that is below their stated minimum. It 
 //   is an error the specify a value for A35 that is above its stated minimum, or that is below or at `0` (zero).
-//   Several dimension elements are not preset in table 3-1, and will return as `undef` in the position 
+//   .
+//   Several dimension elements are not present in table 3-1, and will return as `undef` in the position 
 //   list returned. They are: `0 1 2 3 4 5 6 23 24 25 26 27 28 29 30 31 32 33 37 38 41 42 43 44 45 46 47 48 49 50 51 52 53`.
 // 
 // Example(NORENDER):
@@ -525,6 +525,7 @@ module _sff_8212_50pin_connector(b=undef, anchor=CENTER, spin=0, orient=UP) {
 //
 // Continues:
 //   It is an error to specify a value for A2 that is not one of the two listed possible values.
+//   .
 //   Dimension element `0` is set as `undef`, as it does not appear in table 3-1.
 //
 // Example(NORENDER):
@@ -831,7 +832,7 @@ module _sff_8223_sas_connector(a=undef, b=undef, anchor=CENTER, spin=0, orient=U
 //   | A20         |       0.20  |  0.008 |
 //   | A21         |       0.32  |  0.013 |
 //   .
-//   ![SFF-8248 Figure 3.2](images/sff-82XX/sff-8248-figure3-2.png)
+//   ![SFF-8248 Figure 3.2](images/sff-82XX/sff-8248-figure-3-2.png)
 //   .
 // Arguments: `sff_8248_dimensions()` takes no arguments.
 // Continues:
@@ -869,7 +870,7 @@ function sff_8248_dimensions() =
 
 
 // Module: sff_8248()
-// Synopsis: Model a 2.5" internal disk drive with a serial attached connector
+// Synopsis: Model a 2.5" internal disk drive with a USB Micro-B port
 // Usage:
 //   sff_8248();
 //   sff_8248(<a=undef>, <bottom_mounts=true>, <anchor=CENTER>, <spin=0>, <orient=UP>);
@@ -1010,7 +1011,7 @@ module _sff_8248_connector(a=undef, b=undef, anchor=CENTER, spin=0, orient=UP) {
 //   | A14       |     | 0.40        | 0.016  |
 //   | A15       |     | 100.3       | 3.949  |
 //   .
-//   ![SFF-8252 Figure 3-1](images/sff-82XX/sff-8252-figure3-1.png)
+//   ![SFF-8252 Figure 3-1](images/sff-82XX/sff-8252-figure-3-1.png)
 //   .
 // Arguments:
 //   a9 = Specify a value for A9, which has a minimum of `4.80`. Default: `4.80`
@@ -1020,6 +1021,7 @@ module _sff_8248_connector(a=undef, b=undef, anchor=CENTER, spin=0, orient=UP) {
 // Continues:
 //   It is an error to specify a value for A9, A10, A11, & A12 that is below their stated 
 //   minimum. 
+//   .
 //   Dimension element `0` is set as `undef`, as it does not appear in table 3-1. 
 //
 // Example(NORENDER):
@@ -1052,9 +1054,8 @@ function sff_8252_dimensions(a9=4.80, a10=6.28, a11=1.60, a12=2.40) =
     ];
 
 
-// m
 // Module: sff_8252()
-// Synopsis: Model a 2.5" internal disk drive with a 50-pin connector
+// Synopsis: Model a 2.5" internal disk drive with a SFF-8748 connector
 // Usage:
 //   sff_8252();
 //   sff_8252(<a=undef>, <b=undef>, <bottom_mounts=true>, <anchor=CENTER>, <spin=0>, <orient=UP>);
