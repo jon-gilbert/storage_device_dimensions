@@ -14,6 +14,6 @@ Details on installation of this library [can be found here](https://github.com/j
 
 
 # Author & License
-This library is copyright 2024 Jonathan Gilbert <jong@jong.org>, and released for use under the [MIT License](LICENSE.md).
+This library is copyright 2024 Jonathan Gilbert <jong@jong.org>, and released for use under the [MIT License](https://github.com/jon-gilbert/storage_device_dimensions/blob/main/LICENSE).
 
 
