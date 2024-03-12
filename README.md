@@ -6,7 +6,7 @@ A selection of models from the following SFF form-factors are available as OpenS
 * [SFF-83XX](https://github.com/jon-gilbert/storage_device_dimensions/wiki/sff-82XX.md): 3.5" internal disk drives
 * [SFF-85XX](https://github.com/jon-gilbert/storage_device_dimensions/wiki/sff-82XX.md): 5.25" external disk drives
 
-SFF specifications come from [SNIA](https://www.snia.org/)'s [SFF Technology Affiliate Technical Working Group](https://www.snia.org/sff). These libraries and models are not associate or affilated with SFF or its partners in any way. 
+SFF specifications come from [SNIA](https://www.snia.org/)'s [SFF Technology Affiliate Technical Working Group](https://www.snia.org/sff). The `storage_device_dimensions` library and models are not associated or affilated with SNIA or its partners in any way. 
 
 
 # Installation
