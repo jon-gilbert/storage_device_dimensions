@@ -210,6 +210,8 @@ function sff_8201_dimensions(a1=19.05, a6=100.45) =
 //   `sff_8201()` to produce connecter-specific models for their spec. 
 //   .
 //   The resulting model from `sff_8201()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//   .
+//   **STL:** an example, pre-built STL for `sff_8201()` should be available [here](stls/sff_8201.stl).
 //
 // Arguments:
 //   a = A list of dimensions from `sff_8201_dimensions()`. Default: `undef`, in which case `sff_8201_dimensions()` will be called and its values used directly
@@ -405,6 +407,8 @@ function sff_8212_dimensions(a34=1.00, a35=8.00, a36=60.20, a39=1.25, a40=0.25) 
 //   Reference https://members.snia.org/document/dl/25852 for SFF-8212.
 //   .
 //   The resulting model from `sff_8201()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//   .
+//   **STL:** an example, pre-built STL for `sff_8212()` should be available [here](stls/sff_8212.stl).
 //
 // Arguments:
 //   a = A list of dimensions from `sff_8201_dimensions()`. Default: `undef`, in which case `sff_8201_dimensions()` will be called and its values used directly
@@ -570,6 +574,8 @@ function sff_8222_dimensions(a2=66.50) =
 //   Reference https://members.snia.org/document/dl/25854 for SFF-8222.
 //   .
 //   The resulting model from `sff_8222()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//   .
+//   **STL:** an example, pre-built STL for `sff_8222()` should be available [here](stls/sff_8222.stl).
 //
 // Arguments:
 //   a = A list of dimensions from `sff_8201_dimensions()`. Default: `undef`, in which case `sff_8201_dimensions()` will be called and its values used directly
@@ -701,6 +707,8 @@ function sff_8223_dimensions() =
 //   Reference https://members.snia.org/document/dl/25855 for SFF-8223.
 //   .
 //   The resulting model from `sff_8223()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//   .
+//   **STL:** an example, pre-built STL for `sff_8223()` should be available [here](stls/sff_8223.stl).
 //
 // Arguments:
 //   a = A list of dimensions from `sff_8201_dimensions()`. Default: `undef`, in which case `sff_8201_dimensions()` will be called and its values used directly
@@ -884,6 +892,8 @@ function sff_8248_dimensions() =
 //   Reference https://members.snia.org/document/dl/25855 for SFF-8248.
 //   .
 //   The resulting model from `sff_8248()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//   .
+//   **STL:** an example, pre-built STL for `sff_8248()` should be available [here](stls/sff_8248.stl).
 //
 // Arguments:
 //   a = A list of dimensions from `sff_8201_dimensions()`. Default: `undef`, in which case `sff_8201_dimensions()` will be called and its values used directly
@@ -1068,6 +1078,8 @@ function sff_8252_dimensions(a9=4.80, a10=6.28, a11=1.60, a12=2.40) =
 //   Reference https://members.snia.org/document/dl/25860 for SFF-8252.
 //   .
 //   The resulting model from `sff_8201()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//   .
+//   **STL:** an example, pre-built STL for `sff_8252()` should be available [here](stls/sff_8252.stl).
 //
 // Arguments:
 //   a = A list of dimensions from `sff_8201_dimensions()`. Default: `undef`, in which case `sff_8201_dimensions()` will be called and its values used directly

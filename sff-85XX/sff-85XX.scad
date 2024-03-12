@@ -100,6 +100,8 @@ function sff_8501_dimensions(a1=82.55) =
 //   Produces a model of a 5.25" disk drive, according to the dimensions of SFF-8501. 
 //   .
 //   The resulting model is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//   .
+//   **STL:** an example, pre-built STL for `sff_8501()` should be available [here](stls/sff_8501.stl).
 //
 // Arguments:
 //   ---
@@ -269,6 +271,8 @@ function sff_8551_dimensions(a1=41.53, a4=202.80) =
 //   Produces a model of a 5.25" optical drive, according to the dimensions of SFF-8551. 
 //   .
 //   The resulting model is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//   .
+//   **STL:** an example, pre-built STL for `sff_8551()` should be available [here](stls/sff_8551.stl).
 //
 // Arguments:
 //   ---

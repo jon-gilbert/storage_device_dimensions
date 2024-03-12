@@ -161,6 +161,8 @@ function sff_8301_dimensions(a1=17.80, a2=147.00) =
 //   `sff_8301()` to produce connecter-specific models for their spec. 
 //   .
 //   The resulting model from `sff_8301()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//   .
+//   **STL:** an example, pre-built STL for `sff_8301()` should be available [here](stls/sff_8301.stl).
 //
 // Arguments:
 //   a = A list of dimensions from `sff_8301_dimensions()`. Default: `undef`, in which case `sff_8301_dimensions()` will be called and its values used directly
@@ -341,6 +343,8 @@ function sff_8323_dimensions() =
 //   In models produced by `sff_8323()`, the connector side is oriented towards `BACK`, or in the positive Y-axis direction. 
 //   .
 //   The resulting model from `sff_8323()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//   .
+//   **STL:** an example, pre-built STL for `sff_8323()` should be available [here](stls/sff_8323.stl).
 //
 // Arguments:
 //   a = A list of dimensions from `sff_8301_dimensions()`. Default: `undef`, in which case `sff_8301_dimensions()` will be called and its values used directly
@@ -519,6 +523,8 @@ function sff_8337_dimensions() =
 //   In models produced by `sff_8337()`, the connector side is oriented towards `BACK`, or in the positive Y-axis direction. 
 //   .
 //   The resulting model from `sff_8337()` is BOSL2-attachable; see https://github.com/BelfrySCAD/BOSL2/wiki/Tutorial-Attachments for details on how to use this.
+//   .
+//   **STL:** an example, pre-built STL for `sff_8337()` should be available [here](stls/sff_8337.stl).
 //
 // Arguments:
 //   a = A list of dimensions from `sff_8301_dimensions()`. Default: `undef`, in which case `sff_8301_dimensions()` will be called and its values used directly
